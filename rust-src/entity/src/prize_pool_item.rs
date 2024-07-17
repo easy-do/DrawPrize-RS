@@ -7,7 +7,7 @@ use serde::{Deserialize, Serialize};
 #[sea_orm(table_name = "prize_pool_item")]
 pub struct Model {
     #[sea_orm(primary_key)]
-    pub id: i32,
+    pub id: i64,
     pub prize_name: Option<String>,
     pub icon: Option<String>,
     pub level: Option<i32>,
@@ -15,8 +15,8 @@ pub struct Model {
     pub probability: Option<String>,
     pub quantity: Option<i32>,
     pub status: Option<bool>,
-    pub create_time: Option<String>,
-    pub update_time: Option<String>,
+    pub create_time: Option<DateTime>,
+    pub update_time: Option<DateTime>,
     pub prize_desc: Option<String>,
 }
 

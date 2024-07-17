@@ -4,3 +4,5 @@ pub mod role;
 pub mod resource;
 pub mod email;
 
+pub mod prize;
+
