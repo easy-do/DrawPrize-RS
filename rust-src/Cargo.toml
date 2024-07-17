@@ -1,5 +1,5 @@
 [package]
-name = "lottery-rs"
+name = "prize-rs"
 version = "0.1.0"
 authors = ["gebilaoyu"]
 edition = "2021"
