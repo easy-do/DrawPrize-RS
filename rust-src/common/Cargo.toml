@@ -1,0 +1,12 @@
+[package]
+name = "common"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+log = "0.4.21"
+env_logger = "0.11.3"
+serde = { version = "1.0.203", features = ["derive"] }
+actix-web = "4.7.0"
+sea-orm = { version = "0.12" }
+regex = "1.10.5"

@@ -1,0 +1,22 @@
+## 日志等级
+rust_log_level: info
+
+server:
+  ## 服务启动绑定ip
+  host: 0.0.0.0
+  ## 服务启动绑定端口
+  port: 8080
+
+## 默认使用使用 sql-lite 连接可通过环境变量 DATABASE_URL 覆盖
+## sqlite  DATABASE_URL=sqlite://db.sqlite?mode=rwc
+## mysql  DATABASE_URL=mysql://root:root@127.0.0.1:3306/rust_actix??characterEncoding=utf8&useSSL=false&allowMultiQueries=true&serverTimezone=Asia/Shanghai
+database_url: sqlite://db.sqlite?mode=rwc
+#database_url: mysql://root:root@127.0.0.1:3306/rust_actix??characterEncoding=utf8&useSSL=false&allowMultiQueries=true&serverTimezone=Asia/Shanghai
+
+email:
+  ## 服务器地址
+  smtp_server: "smtp.qq.com"
+  ## 发件邮箱
+  smtp_username: xxx@xxx.com
+  ## 授权码/密码
+  smtp_password: xxx

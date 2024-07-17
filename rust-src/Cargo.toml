@@ -1,0 +1,12 @@
+[package]
+name = "lottery-rs"
+version = "0.1.0"
+authors = ["gebilaoyu"]
+edition = "2021"
+publish = false
+
+[workspace]
+members = [".", "api", "service", "entity", "migration", "common", "security", "model"]
+
+[dependencies]
+api = { path = "api" }

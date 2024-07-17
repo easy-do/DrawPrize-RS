@@ -1,0 +1,27 @@
+[package]
+name = "api"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "api"
+path = "src/lib.rs"
+
+[dependencies]
+log = "0.4.22"
+env_logger = "0.11.3"
+dotenv = "0.15.0"
+actix-web = "4.7.0"
+chrono = { version = "0.4.38", features = ["serde"] }
+serde = { version = "1.0.203", features = ["derive"] }
+serde_yaml = "0.9.34"
+sea-orm = { version = "0.12", features = ["sqlx-mysql", "sqlx-sqlite", "runtime-tokio-native-tls", "macros", "chrono"] }
+moka = { version = "0.12.7", features = ["sync"] }
+entity = { path = "../entity" }
+migration = { path = "../migration" }
+service = { path = "../service" }
+common = { path = "../common" }
+security = { path = "../security" }
+model = { path = "../model" }
+
+
