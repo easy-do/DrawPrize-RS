@@ -2,27 +2,27 @@
 FROM registry.cn-hangzhou.aliyuncs.com/gebilaoyu/rust:1.79.0 AS compiler
 
 
-WORKDIR /lottery-rs
+WORKDIR /prize-rs
 ENV RUSTUP_DIST_SERVER=https://mirrors.ustc.edu.cn/rust-static
 ENV RUSTUP_UPDATE_ROOT=https://mirrors.ustc.edu.cn/rust-static/rustup
-ADD . /api /lottery-rs/api/
-ADD . /common /lottery-rs/common/
-ADD . /entity /lottery-rs/entity/
-ADD . /migration /lottery-rs/migration/
-ADD . /model /lottery-rs/model/
-ADD . /security /lottery-rs/security/
-ADD . /service /lottery-rs/service/
-ADD . /src /lottery-rs/src/
-COPY . /config.yaml /lottery-rs/
-COPY . /Cargo.toml /lottery-rs/
+ADD . /api /prize-rs/api/
+ADD . /common /prize-rs/common/
+ADD . /entity /prize-rs/entity/
+ADD . /migration /prize-rs/migration/
+ADD . /model /prize-rs/model/
+ADD . /security /prize-rs/security/
+ADD . /service /prize-rs/service/
+ADD . /src /prize-rs/src/
+COPY . /config.yaml /prize-rs/
+COPY . /Cargo.toml /prize-rs/
 RUN cargo build --release
 
 
 # Run
 FROM registry.cn-hangzhou.aliyuncs.com/gebilaoyu/ubuntu:24.10
 
-COPY --from=compiler /lottery-rs/target/release/lottery-rs /apps/
-COPY --from=compiler /lottery-rs/config.yaml /apps/
+COPY --from=compiler /prize-rs/target/release/prize-rs /apps/
+COPY --from=compiler /prize-rs/config.yaml /apps/
 
 #ENV HOST=0.0.0.0
 #ENV PORT=8080
@@ -30,4 +30,4 @@ COPY --from=compiler /lottery-rs/config.yaml /apps/
 #ENV DATABASE_URL=sqlite://db.sqlite?mode=rwc
 
 WORKDIR /apps
-CMD ["./lottery-rs"]
+CMD ["./prize-rs"]

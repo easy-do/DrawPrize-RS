@@ -7,3 +7,9 @@ pub mod user_role;
 pub mod resource;
 pub mod role_resource;
 pub mod role;
+pub mod prize_pool;
+pub mod prize_pool_item;
+pub mod live_prize_pool;
+pub mod live_prize_pool_item;
+pub mod live_prize_history;
+
