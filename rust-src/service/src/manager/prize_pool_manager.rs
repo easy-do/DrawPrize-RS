@@ -17,11 +17,11 @@ pub async fn get_prize_pool_list(db: &DbConn) -> Result<Vec<prize_pool::Model>, 
 
 pub async fn create_prize_pool_data(db: &DbConn, form: CreatePrizePool) -> Result<i64, MyError> {
     let pool_name = form.pool_name.ok_or(MyError::ServerError("奖池名称不能为空".to_string()))?;
-    let pool_type = form.pool_type.ok_or(MyError::ServerError("奖池类型不能为空".to_string()))?;
+    // let pool_type = form.pool_type.ok_or(MyError::ServerError("奖池类型不能为空".to_string()))?;
     let model = prize_pool::ActiveModel {
         id: NotSet,
         pool_name: Set(Some(pool_name)),
-        pool_type: Set(Some(pool_type)),
+        pool_type: Set(form.pool_type),
         share_pool: Set(form.share_pool),
         strategy: Set(form.strategy),
         status: Set(form.status),

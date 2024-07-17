@@ -105,7 +105,11 @@ function InfoPage(props: { id: number; visible; setVisible }) {
             },
             {
               label: t['searchTable.columns.status'],
-              value: infoData ? infoData.status : '',
+              value: infoData
+              ? infoData.status
+                ? t['searchForm.enable']
+                : t['searchForm.disable']
+              : '',
             },
             {
               label: t['searchTable.columns.api_path'],
