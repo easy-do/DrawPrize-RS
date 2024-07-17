@@ -7,14 +7,14 @@ use serde::{Deserialize, Serialize};
 #[sea_orm(table_name = "prize_pool")]
 pub struct Model {
     #[sea_orm(primary_key)]
-    pub id: i32,
+    pub id: i64,
     pub pool_name: Option<String>,
     pub pool_type: Option<i32>,
     pub share_pool: Option<bool>,
     pub strategy: Option<i32>,
     pub status: Option<bool>,
-    pub create_time: Option<String>,
-    pub update_time: Option<String>,
+    pub create_time: Option<DateTime>,
+    pub update_time: Option<DateTime>,
     pub pool_desc: Option<String>,
 }
 
