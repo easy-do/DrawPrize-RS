@@ -23,13 +23,13 @@ pub async fn delete(db: &DbConn, resource_id: i64) -> Result<bool, MyError> {
     Ok(prize_pool_manager::delete_prize_pool_data(db, resource_id).await?)
 }
 
-pub async fn info(db: &DbConn, resource_id: i64) -> Result<prize_pool::Model, MyError> {
-    let resource = prize_pool_manager::get_prize_pool_data(db, resource_id).await?
-        .ok_or(MyError::ServerError(format!("resource [{:?}] does not exist", resource_id)))?;
+pub async fn info(db: &DbConn, id: i64) -> Result<prize_pool::Model, MyError> {
+    let resource = prize_pool_manager::get_prize_pool_data(db, id).await?
+        .ok_or(MyError::ServerError(format!("[{:?}] does not exist", id)))?;
     Ok(resource)
 }
 
-pub async fn page(db: &DbConn, resource_page: PrizePoolPage) -> Result<PageResult<prize_pool::Model>, MyError> {
-    prize_pool_manager::page(db, resource_page).await
+pub async fn page(db: &DbConn, page: PrizePoolPage) -> Result<PageResult<prize_pool::Model>, MyError> {
+    prize_pool_manager::page(db, page).await
 }
 

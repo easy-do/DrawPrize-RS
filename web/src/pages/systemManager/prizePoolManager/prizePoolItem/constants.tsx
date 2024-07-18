@@ -7,7 +7,7 @@ const { Text } = Typography;
 
 export const DefaultSorter = {
   field: 'id',
-  direction: 'create_time',
+  direction: 'asc',
 };
 
 
