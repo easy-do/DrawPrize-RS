@@ -7,6 +7,7 @@ import {
   Space,
   Typography,
   Notification,
+  Modal,
 } from '@arco-design/web-react';
 import PermissionWrapper from '@/components/PermissionWrapper';
 import { IconPlus } from '@arco-design/web-react/icon';
@@ -21,6 +22,7 @@ import { v4 } from 'uuid';
 import AddPage from './addPage';
 import InfoPage from './infoPage';
 import UpdatePage from './updatePage';
+import PrizePoolItemPage from './prizePoolItem';
 
 const { Title } = Typography;
 
@@ -44,6 +46,10 @@ function SearchTable() {
     //删除
     if (type === 'delete') {
       deleteData(record.id);
+    }
+    //删除
+    if (type === 'item_manager') {
+      itemManager(record.id);
     }
   };
 
@@ -81,6 +87,14 @@ function SearchTable() {
         fetchData();
       }
     });
+  }
+
+  //编辑
+  const [itemManagerVisible, setItemManagerVisibled] = useState(false);
+  const [prizePollId, setPrizePollId] = useState();
+  function itemManager(id) {
+    setPrizePollId(id);
+    setItemManagerVisibled(true);
   }
 
   const columns = useMemo(() => getColumns(t, tableCallback), [t]);
@@ -157,7 +171,10 @@ function SearchTable() {
     if (params.status != undefined && 'string' == typeof params.status) {
       params.status = params.status == 'true';
     }
-    if (params.share_pool != undefined && 'string' == typeof params.share_pool) {
+    if (
+      params.share_pool != undefined &&
+      'string' == typeof params.share_pool
+    ) {
       params.share_pool = params.share_pool == 'true';
     }
     setFormParams(params);
@@ -209,6 +226,16 @@ function SearchTable() {
         setVisible={setUpdateVisibled}
         callback={fetchData}
       />
+      <Modal
+        title={t['searchTable.columns.operations.item_manager']}
+        style={{ width: '80%', height: '80%' }}
+        visible={itemManagerVisible}
+        onCancel={() => setItemManagerVisibled(false)}
+        footer={null}
+        maskClosable={false}
+      >
+        <PrizePoolItemPage prizePoolId={prizePollId} />
+      </Modal>
     </Card>
   );
 }

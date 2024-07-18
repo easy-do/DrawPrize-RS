@@ -13,7 +13,7 @@ impl MigrationTrait for Migration {
     async fn up(&self, manager: &SchemaManager) -> Result<(), DbErr> {
         let db = manager.get_connection();
         resource::ActiveModel {
-            id: Set(23),
+            id: Set(26),
             parent_id: Set(2),
             resource_name: Set(Some("关联角色".to_string())),
             resource_code: Set(Some("api_user_set_role".to_string())),
@@ -31,7 +31,7 @@ impl MigrationTrait for Migration {
             resource_desc: Set(Some("关联角色接口".to_string())),
         }.insert(db).await?;
         resource::ActiveModel {
-            id: Set(24),
+            id: Set(27),
             parent_id: Set(2),
             resource_name: Set(Some("重置密码".to_string())),
             resource_code: Set(Some("api_user_reset_password".to_string())),
@@ -49,8 +49,8 @@ impl MigrationTrait for Migration {
             resource_desc: Set(Some("重置密码接口".to_string())),
         }.insert(db).await?;
         resource::ActiveModel {
-            id: Set(25),
-            parent_id: Set(16),
+            id: Set(28),
+            parent_id: Set(18),
             resource_name: Set(Some("关联资源".to_string())),
             resource_code: Set(Some("api_role_set_resource".to_string())),
             resource_type: Set(Some(2)),
@@ -69,17 +69,17 @@ impl MigrationTrait for Migration {
         role_resource::ActiveModel {
             id: NotSet,
             role_id: Set(1),
-            resource_id: Set(23),
+            resource_id: Set(26),
         }.insert(db).await?;
         role_resource::ActiveModel {
             id: NotSet,
             role_id: Set(1),
-            resource_id: Set(24),
+            resource_id: Set(27),
         }.insert(db).await?;
         role_resource::ActiveModel {
             id: NotSet,
             role_id: Set(1),
-            resource_id: Set(25),
+            resource_id: Set(28),
         }.insert(db).await?;
         Ok(())
     }

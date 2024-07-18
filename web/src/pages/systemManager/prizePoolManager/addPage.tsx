@@ -45,7 +45,7 @@ function AddPage(props: { visible; setVisible; callback: () => void }) {
   return (
     <Modal
       title={t['searchTable.operations.add']}
-      style={{ width: '35%'}}
+      style={{ width: '35%' }}
       visible={props.visible}
       onOk={() => {
         handleSubmit();

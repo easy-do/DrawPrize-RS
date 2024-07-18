@@ -10,7 +10,6 @@ export const DefaultSorter = {
   direction: 'asc',
 };
 
-
 export function getColumns(
   t: any,
   callback: (record: Record<string, any>, type: string) => Promise<void>
@@ -23,23 +22,30 @@ export function getColumns(
       render: (value) => <Text copyable>{value}</Text>,
     },
     {
-      title: t['searchTable.columns.pool_name'],
-      dataIndex: 'pool_name',
+      title: t['searchTable.columns.prize_name'],
+      dataIndex: 'prize_name',
+      ellipsis: true,
     },
-    // {
-    //   title: t['searchTable.columns.pool_type'],
-    //   dataIndex: 'pool_type',
-    // },
     {
-      title: t['searchTable.columns.share_pool'],
-      dataIndex: 'share_pool',
-      render: (value) =>
-        value ? t['searchTable.columns.yes'] : t['searchTable.columns.no'],
+      title: t['searchTable.columns.level'],
+      dataIndex: 'level',
+      ellipsis: true,
     },
-    // {
-    //   title: t['searchTable.columns.strategy'],
-    //   dataIndex: 'strategy',
-    // },
+    {
+      title: t['searchTable.columns.level_name'],
+      dataIndex: 'level_name',
+      ellipsis: true,
+    },
+    {
+      title: t['searchTable.columns.probability'],
+      dataIndex: 'probability',
+      ellipsis: true,
+    },
+    {
+      title: t['searchTable.columns.quantity'],
+      dataIndex: 'quantity',
+      ellipsis: true,
+    },
     {
       title: t['searchTable.columns.status'],
       dataIndex: 'status',
@@ -69,10 +75,9 @@ export function getColumns(
       },
     },
     {
-      title: t['searchTable.columns.pool_desc'],
-      dataIndex: 'pool_desc',
+      title: t['searchTable.columns.prize_desc'],
+      dataIndex: 'prize_desc',
       ellipsis: true,
-      
     },
     {
       title: t['searchTable.columns.operations'],

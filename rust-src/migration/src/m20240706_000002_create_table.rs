@@ -87,6 +87,24 @@ impl MigrationTrait for Migration {
         resource::ActiveModel {
             id: Set(5),
             parent_id: Set(2),
+            resource_name: Set(Some("用户分页查询".to_string())),
+            resource_code: Set(Some("api_user_page".to_string())),
+            resource_type: Set(Some(2)),
+            resource_root: Set(Some(false)),
+            resource_action: Set(Some(true)),
+            order_number: Set(Some(0)),
+            url: Default::default(),
+            api_path: Set(Some("/api/user/page".to_string())),
+            api_http_method: Set(Some("POST".to_string())),
+            api_path_regex: NotSet,
+            role: NotSet,
+            status: Set(Some(true)),
+            icon: NotSet,
+            resource_desc: Set(Some("用户分页查询接口".to_string())),
+        }.insert(db).await?;
+        resource::ActiveModel {
+            id: Set(6),
+            parent_id: Set(2),
             resource_name: Set(Some("添加用户".to_string())),
             resource_code: Set(Some("api_user_add".to_string())),
             resource_type: Set(Some(2)),
@@ -103,7 +121,7 @@ impl MigrationTrait for Migration {
             resource_desc: Set(Some("添加用户接口".to_string())),
         }.insert(db).await?;
         resource::ActiveModel {
-            id: Set(6),
+            id: Set(7),
             parent_id: Set(2),
             resource_name: Set(Some("修改用户".to_string())),
             resource_code: Set(Some("api_user_update".to_string())),
@@ -121,7 +139,7 @@ impl MigrationTrait for Migration {
             resource_desc: Set(Some("修改用户接口".to_string())),
         }.insert(db).await?;
         resource::ActiveModel {
-            id: Set(7),
+            id: Set(8),
             parent_id: Set(2),
             resource_name: Set(Some("删除用户".to_string())),
             resource_code: Set(Some("api_user_delete".to_string())),
@@ -139,7 +157,7 @@ impl MigrationTrait for Migration {
             resource_desc: Set(Some("删除用户接口".to_string())),
         }.insert(db).await?;
         resource::ActiveModel {
-            id: Set(8),
+            id: Set(9),
             parent_id: Set(2),
             resource_name: Set(Some("变更用户状态".to_string())),
             resource_code: Set(Some("api_user_set_status".to_string())),
