@@ -43,6 +43,7 @@ impl MigrationTrait for Migration {
                             .auto_increment()
                             .primary_key(),
                     )
+                    .col(ColumnDef::new(PrizePoolItem::PoolId).big_integer().comment("奖池ID"))
                     .col(ColumnDef::new(PrizePoolItem::PrizeName).string().char_len(32).comment("奖品名称"))
                     .col(ColumnDef::new(PrizePoolItem::Icon).text().comment("图标"))
                     .col(ColumnDef::new(PrizePoolItem::Level).tiny_integer().default(0).comment("奖品等级"))
@@ -148,6 +149,7 @@ enum PrizePool {
 enum PrizePoolItem {
     Table,
     Id,
+    PoolId,
     PrizeName,
     Level,
     LevelName,

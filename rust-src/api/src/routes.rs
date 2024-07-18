@@ -1,6 +1,6 @@
 use actix_web::web;
 
-use crate::controller::{auth_controller, prize_pool_controller, resource_controller, role_controller, user_controller};
+use crate::controller::{auth_controller, prize_pool_controller, prize_pool_item_controller, resource_controller, role_controller, user_controller};
 use crate::controller::health::health_check;
 
 // 生成路由地址
@@ -11,6 +11,16 @@ pub fn general_routes(cfg: &mut web::ServiceConfig) {
     resource_routes(cfg);
     auth_routes(cfg);
     prize_pool_routes(cfg);
+    prize_pool_item_routes(cfg);
+}
+
+pub fn prize_pool_item_routes(cfg: &mut web::ServiceConfig) {
+    cfg.service(user_controller::list)
+        .service(prize_pool_item_controller::add)
+        .service(prize_pool_item_controller::update)
+        .service(prize_pool_item_controller::delete)
+        .service(prize_pool_item_controller::info)
+        .service(prize_pool_item_controller::page);
 }
 
 pub fn prize_pool_routes(cfg: &mut web::ServiceConfig) {
