@@ -15,7 +15,7 @@ import SearchForm from './form';
 import locale from './locale';
 import styles from './style/index.module.less';
 import { DefaultSorter, getColumns } from './constants';
-import { getPrizePoolPage, removePrizePool } from '@/api/prizePool';
+import { getPrizePoolItemPage, removePrizePoolItem } from '@/api/prizePoolItem';
 
 import { v4 } from 'uuid';
 import AddPage from './addPage';
@@ -24,7 +24,7 @@ import UpdatePage from './updatePage';
 
 const { Title } = Typography;
 
-function SearchTable() {
+function PrizePoolItemPage(props: { prizePoolId: number }) {
   const t = useLocale(locale);
 
   //表格列回调函数
@@ -71,7 +71,7 @@ function SearchTable() {
 
   //删除
   function deleteData(id) {
-    removePrizePool(id).then((res) => {
+    removePrizePoolItem(id).then((res) => {
       const { success, message } = res.data;
       if (success) {
         Notification.success({ content: message, duration: 1000 });
@@ -106,13 +106,14 @@ function SearchTable() {
     JSON.stringify(sorter),
     JSON.stringify(formParams),
     searchId,
+    props.prizePoolId,
   ]);
 
   //分页请求
   function fetchData() {
     const { current, pageSize } = pagination;
     setLoading(true);
-    getPrizePoolPage({
+    getPrizePoolItemPage({
       page_data: {
         page: current,
         page_size: pageSize,
@@ -157,9 +158,6 @@ function SearchTable() {
     if (params.status != undefined && 'string' == typeof params.status) {
       params.status = params.status == 'true';
     }
-    if (params.share_pool != undefined && 'string' == typeof params.share_pool) {
-      params.share_pool = params.share_pool == 'true';
-    }
     setFormParams(params);
     setSearchId(v4());
   }
@@ -167,7 +165,7 @@ function SearchTable() {
   return (
     <Card>
       <Title heading={6}>{t['menu.list.searchTable']}</Title>
-      <SearchForm onSearch={handleSearch} />
+      <SearchForm prizePoolId={props.prizePoolId} onSearch={handleSearch} />
       <PermissionWrapper
         requiredPermissions={[
           { resource: 'user_manager', actions: ['api_user_add'] },
@@ -194,6 +192,7 @@ function SearchTable() {
         data={data}
       />
       <AddPage
+        prizePoolId={props.prizePoolId}
         visible={addVisible}
         setVisible={setAddVisible}
         callback={fetchData}
@@ -213,4 +212,4 @@ function SearchTable() {
   );
 }
 
-export default SearchTable;
+export default PrizePoolItemPage;

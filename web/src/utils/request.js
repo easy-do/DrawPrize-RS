@@ -33,7 +33,7 @@ axios.interceptors.response.use(
       cookie.remove('Authorization');
       localStorage.clear()
       sessionStorage.clear()
-      window.location.pathname = '/welcome'
+      window.location.pathname = '/home'
     } else {
       Notification.warning({ content: message, duration: 3000 })
     }

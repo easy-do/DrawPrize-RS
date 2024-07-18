@@ -13,7 +13,7 @@ impl MigrationTrait for Migration {
     async fn up(&self, manager: &SchemaManager) -> Result<(), DbErr> {
         let db = manager.get_connection();
         resource::ActiveModel {
-            id: Set(26),
+            id: Set(29),
             parent_id: Set(1),
             resource_name: Set(Some("奖池管理".to_string())),
             resource_code: Set(Some("prize_pool_manager".to_string())),
@@ -31,10 +31,10 @@ impl MigrationTrait for Migration {
             resource_desc: Set(Some("奖池管理菜单".to_string())),
         }.insert(db).await?;
         resource::ActiveModel {
-            id: Set(27),
-            parent_id: Set(26),
+            id: Set(30),
+            parent_id: Set(29),
             resource_name: Set(Some("奖池详情".to_string())),
-            resource_code: Set(Some("prize_pool_info".to_string())),
+            resource_code: Set(Some("api_prize_pool_info".to_string())),
             resource_type: Set(Some(2)),
             resource_root: Set(Some(false)),
             resource_action: Set(Some(true)),
@@ -49,10 +49,10 @@ impl MigrationTrait for Migration {
             resource_desc: Set(Some("奖池详情接口".to_string())),
         }.insert(db).await?;
         resource::ActiveModel {
-            id: Set(28),
-            parent_id: Set(26),
+            id: Set(31),
+            parent_id: Set(29),
             resource_name: Set(Some("奖池列表".to_string())),
-            resource_code: Set(Some("prize_pool_list".to_string())),
+            resource_code: Set(Some("api_prize_pool_list".to_string())),
             resource_type: Set(Some(2)),
             resource_root: Set(Some(false)),
             resource_action: Set(Some(true)),
@@ -67,10 +67,28 @@ impl MigrationTrait for Migration {
             resource_desc: Set(Some("奖池列表接口".to_string())),
         }.insert(db).await?;
         resource::ActiveModel {
-            id: Set(29),
-            parent_id: Set(26),
+            id: Set(32),
+            parent_id: Set(29),
+            resource_name: Set(Some("奖池分页查询".to_string())),
+            resource_code: Set(Some("api_prize_pool_page".to_string())),
+            resource_type: Set(Some(2)),
+            resource_root: Set(Some(false)),
+            resource_action: Set(Some(true)),
+            order_number: Set(Some(0)),
+            url: Default::default(),
+            api_path: Set(Some("/api/prize_pool/page".to_string())),
+            api_http_method: Set(Some("POST".to_string())),
+            api_path_regex: NotSet,
+            role: NotSet,
+            status: Set(Some(true)),
+            icon: NotSet,
+            resource_desc: Set(Some("奖池分页查询接口".to_string())),
+        }.insert(db).await?;
+        resource::ActiveModel {
+            id: Set(33),
+            parent_id: Set(29),
             resource_name: Set(Some("添加奖池".to_string())),
-            resource_code: Set(Some("prize_pool_add".to_string())),
+            resource_code: Set(Some("api_prize_pool_add".to_string())),
             resource_type: Set(Some(2)),
             resource_root: Set(Some(false)),
             resource_action: Set(Some(true)),
@@ -85,10 +103,10 @@ impl MigrationTrait for Migration {
             resource_desc: Set(Some("添加奖池接口".to_string())),
         }.insert(db).await?;
         resource::ActiveModel {
-            id: Set(30),
-            parent_id: Set(26),
+            id: Set(34),
+            parent_id: Set(29),
             resource_name: Set(Some("修改奖池".to_string())),
-            resource_code: Set(Some("prize_pool_update".to_string())),
+            resource_code: Set(Some("api_prize_pool_update".to_string())),
             resource_type: Set(Some(2)),
             resource_root: Set(Some(false)),
             resource_action: Set(Some(true)),
@@ -103,10 +121,10 @@ impl MigrationTrait for Migration {
             resource_desc: Set(Some("修改奖池接口".to_string())),
         }.insert(db).await?;
         resource::ActiveModel {
-            id: Set(31),
-            parent_id: Set(26),
+            id: Set(35),
+            parent_id: Set(29),
             resource_name: Set(Some("删除奖池".to_string())),
-            resource_code: Set(Some("prize_pool_delete".to_string())),
+            resource_code: Set(Some("api_prize_pool_delete".to_string())),
             resource_type: Set(Some(2)),
             resource_root: Set(Some(false)),
             resource_action: Set(Some(true)),
@@ -119,16 +137,6 @@ impl MigrationTrait for Migration {
             status: Set(Some(true)),
             icon: NotSet,
             resource_desc: Set(Some("删除奖池接口".to_string())),
-        }.insert(db).await?;
-        role_resource::ActiveModel {
-            id: NotSet,
-            role_id: Set(1),
-            resource_id: Set(26),
-        }.insert(db).await?;
-        role_resource::ActiveModel {
-            id: NotSet,
-            role_id: Set(1),
-            resource_id: Set(27),
         }.insert(db).await?;
         role_resource::ActiveModel {
             id: NotSet,
@@ -149,6 +157,26 @@ impl MigrationTrait for Migration {
             id: NotSet,
             role_id: Set(1),
             resource_id: Set(31),
+        }.insert(db).await?;
+        role_resource::ActiveModel {
+            id: NotSet,
+            role_id: Set(1),
+            resource_id: Set(32),
+        }.insert(db).await?;
+        role_resource::ActiveModel {
+            id: NotSet,
+            role_id: Set(1),
+            resource_id: Set(33),
+        }.insert(db).await?;
+        role_resource::ActiveModel {
+            id: NotSet,
+            role_id: Set(1),
+            resource_id: Set(34),
+        }.insert(db).await?;
+        role_resource::ActiveModel {
+            id: NotSet,
+            role_id: Set(1),
+            resource_id: Set(35),
         }.insert(db).await?;
         Ok(())
     }

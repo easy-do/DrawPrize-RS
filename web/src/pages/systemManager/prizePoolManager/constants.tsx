@@ -10,7 +10,6 @@ export const DefaultSorter = {
   direction: 'create_time',
 };
 
-
 export function getColumns(
   t: any,
   callback: (record: Record<string, any>, type: string) => Promise<void>
@@ -72,7 +71,6 @@ export function getColumns(
       title: t['searchTable.columns.pool_desc'],
       dataIndex: 'pool_desc',
       ellipsis: true,
-      
     },
     {
       title: t['searchTable.columns.operations'],
@@ -82,7 +80,10 @@ export function getColumns(
         <PermissionWrapper
           key={'view'}
           requiredPermissions={[
-            { resource: 'resource_manager', actions: ['api_resource_info'] },
+            {
+              resource: 'prize_pool_manager',
+              actions: ['api_prize_pool_info'],
+            },
           ]}
         >
           <Button
@@ -96,7 +97,10 @@ export function getColumns(
         <PermissionWrapper
           key={'update'}
           requiredPermissions={[
-            { resource: 'resource_manager', actions: ['api_resource_update'] },
+            {
+              resource: 'prize_pool_manager',
+              actions: ['api_prize_pool_update'],
+            },
           ]}
         >
           <Button
@@ -108,9 +112,41 @@ export function getColumns(
           </Button>
         </PermissionWrapper>,
         <PermissionWrapper
+          key={'update'}
+          requiredPermissions={[
+            {
+              resource: 'prize_pool_manager',
+              actions: ['api_prize_pool_update'],
+            },
+          ]}
+        >
+          <Button
+            type="text"
+            size="small"
+            onClick={() => callback(record, 'update')}
+          >
+            {t['searchTable.columns.operations.update']}
+          </Button>
+        </PermissionWrapper>,
+        <PermissionWrapper
+          key={'item_manager'}
+          requiredPermissions={[{ resource: 'prize_pool_item_manager' }]}
+        >
+          <Button
+            type="text"
+            size="small"
+            onClick={() => callback(record, 'item_manager')}
+          >
+            {t['searchTable.columns.operations.item_manager']}
+          </Button>
+        </PermissionWrapper>,
+        <PermissionWrapper
           key={'delete'}
           requiredPermissions={[
-            { resource: 'resource_manager', actions: ['api_resource_delete'] },
+            {
+              resource: 'prize_pool_manager',
+              actions: ['api_prize_pool_delete'],
+            },
           ]}
         >
           <Popconfirm

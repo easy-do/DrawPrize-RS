@@ -1,11 +1,10 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { Form, Input, Button, Grid, Select } from '@arco-design/web-react';
 import { GlobalContext } from '@/context';
 import locale from './locale';
 import useLocale from '@/utils/useLocale';
 import { IconRefresh, IconSearch } from '@arco-design/web-react/icon';
 import styles from './style/index.module.less';
-import { API_HTTP_METHOD } from './constants';
 
 const { Row, Col } = Grid;
 const { useForm } = Form;
@@ -42,7 +41,6 @@ function SearchForm(props: {
         <Row gutter={24}>
           <Col span={colSpan}>
             <Form.Item
-              required
               label={t['searchTable.columns.pool_name']}
               field={'pool_name'}
             >
@@ -51,7 +49,6 @@ function SearchForm(props: {
           </Col>
           {/* <Col span={colSpan}>
             <Form.Item
-              required
               label={t['searchTable.columns.pool_type']}
               field={'pool_type'}
             >
@@ -60,7 +57,6 @@ function SearchForm(props: {
           </Col> */}
           <Col span={colSpan}>
             <Form.Item
-              required
               label={t['searchTable.columns.share_pool']}
               field={'share_pool'}
             >
@@ -82,7 +78,6 @@ function SearchForm(props: {
           </Col>
           {/* <Col span={colSpan}>
             <Form.Item
-              required
               label={t['searchTable.columns.strategy']}
               field={'strategy'}
             >
@@ -91,7 +86,6 @@ function SearchForm(props: {
           </Col> */}
           <Col span={colSpan}>
             <Form.Item
-              required
               label={t['searchTable.columns.pool_desc']}
               field={'pool_desc'}
             >
@@ -99,11 +93,7 @@ function SearchForm(props: {
             </Form.Item>
           </Col>
           <Col span={colSpan}>
-            <Form.Item
-              required
-              label={t['searchTable.columns.status']}
-              field={'status'}
-            >
+            <Form.Item label={t['searchTable.columns.status']} field={'status'}>
               <Select
                 placeholder={t['searchForm.placeholder']}
                 options={[

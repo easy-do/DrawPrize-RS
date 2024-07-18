@@ -71,6 +71,11 @@ impl MigrationTrait for Migration {
             role_id: Set(1),
             resource_id: Set(8),
         }.insert(db).await?;
+        role_resource::ActiveModel {
+            id: NotSet,
+            role_id: Set(1),
+            resource_id: Set(9),
+        }.insert(db).await?;
         Ok(())
     }
 

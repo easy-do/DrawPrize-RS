@@ -16,11 +16,6 @@ impl MigrationTrait for Migration {
         role_resource::ActiveModel {
             id: NotSet,
             role_id: Set(1),
-            resource_id: Set(9),
-        }.insert(db).await?;
-        role_resource::ActiveModel {
-            id: NotSet,
-            role_id: Set(1),
             resource_id: Set(10),
         }.insert(db).await?;
         role_resource::ActiveModel {
@@ -82,6 +77,21 @@ impl MigrationTrait for Migration {
             id: NotSet,
             role_id: Set(1),
             resource_id: Set(22),
+        }.insert(db).await?;
+        role_resource::ActiveModel {
+            id: NotSet,
+            role_id: Set(1),
+            resource_id: Set(23),
+        }.insert(db).await?;
+        role_resource::ActiveModel {
+            id: NotSet,
+            role_id: Set(1),
+            resource_id: Set(24),
+        }.insert(db).await?;
+        role_resource::ActiveModel {
+            id: NotSet,
+            role_id: Set(1),
+            resource_id: Set(25),
         }.insert(db).await?;
         Ok(())
     }

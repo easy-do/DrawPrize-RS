@@ -1,4 +1,4 @@
-import React, { useContext, useRef } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import {
   Form,
   FormInstance,
@@ -10,10 +10,15 @@ import {
 import locale from './locale';
 import useLocale from '@/utils/useLocale';
 import { GlobalContext } from '@/context';
-import { addPrizePool } from '@/api/prizePool';
+import { addPrizePoolItem } from '@/api/prizePoolItem';
 import FormItem from '@arco-design/web-react/es/Form/form-item';
 
-function AddPage(props: { visible; setVisible; callback: () => void }) {
+function AddPage(props: {
+  visible;
+  setVisible;
+  prizePoolId;
+  callback: () => void;
+}) {
   const formRef = useRef<FormInstance>();
 
   const { lang } = useContext(GlobalContext);
@@ -26,8 +31,10 @@ function AddPage(props: { visible; setVisible; callback: () => void }) {
     formRef.current.validate().then((values) => {
       setLoading(true);
       values.status = values.status == 'true';
-      values.share_pool = values.share_pool == 'true';
-      addPrizePool(values)
+      values.level = Number(values.level);
+      values.probability = Number(values.probability);
+      values.quantity = Number(values.quantity);
+      addPrizePoolItem(values)
         .then((res) => {
           const { success, message } = res.data;
           if (success) {
@@ -42,10 +49,14 @@ function AddPage(props: { visible; setVisible; callback: () => void }) {
     });
   };
 
+  useEffect(() => {
+    formRef.current?.setFieldsValue({ pool_id: props.prizePoolId });
+  }, [props.visible]);
+
   return (
     <Modal
       title={t['searchTable.operations.add']}
-      style={{ width: '35%'}}
+      style={{ width: '35%' }}
       visible={props.visible}
       onOk={() => {
         handleSubmit();
@@ -64,51 +75,60 @@ function AddPage(props: { visible; setVisible; callback: () => void }) {
         wrapperCol={{ span: lang === 'en-US' ? 17 : 18 }}
       >
         <FormItem
+          disabled
           required
-          label={t['searchTable.columns.pool_name']}
-          field={'pool_name'}
+          initialValue={props.prizePoolId}
+          label={t['searchTable.columns.pool_id']}
+          field={'pool_id'}
         >
           <Input placeholder={t['searchForm.placeholder']} allowClear />
         </FormItem>
-        {/* <FormItem
-          required
-          label={t['searchTable.columns.pool_type']}
-          field={'pool_type'}
-        >
-          <Input placeholder={t['searchForm.placeholder']} allowClear />
-        </FormItem> */}
         <FormItem
           required
-          initialValue={'false'}
-          label={t['searchTable.columns.share_pool']}
-          field={'share_pool'}
+          label={t['searchTable.columns.prize_name']}
+          field={'prize_name'}
         >
-          <Select
+          <Input placeholder={t['searchForm.placeholder']} allowClear />
+        </FormItem>
+        <FormItem required label={t['searchTable.columns.icon']} field={'icon'}>
+          <Input placeholder={t['searchForm.placeholder']} allowClear />
+        </FormItem>
+        <FormItem
+          required
+          label={t['searchTable.columns.level']}
+          field={'level'}
+        >
+          <Input
+            type="number"
             placeholder={t['searchForm.placeholder']}
-            options={[
-              {
-                label: t['searchTable.columns.yes'],
-                value: 'true',
-              },
-              {
-                label: t['searchTable.columns.no'],
-                value: 'false',
-              },
-            ]}
             allowClear
           />
         </FormItem>
-        {/* <FormItem
-          required
-          label={t['searchTable.columns.strategy']}
-          field={'strategy'}
-        >
-          <Input placeholder={t['searchForm.placeholder']} allowClear />
-        </FormItem> */}
         <FormItem
           required
-          label={t['searchTable.columns.pool_desc']}
-          field={'pool_desc'}
+          label={t['searchTable.columns.level_name']}
+          field={'level_name'}
+        >
+          <Input placeholder={t['searchForm.placeholder']} allowClear />
+        </FormItem>
+        <FormItem
+          required
+          label={t['searchTable.columns.probability']}
+          field={'probability'}
+        >
+          <Input placeholder={t['searchForm.placeholder']} allowClear />
+        </FormItem>
+        <FormItem
+          required
+          label={t['searchTable.columns.quantity']}
+          field={'quantity'}
+        >
+          <Input placeholder={t['searchForm.placeholder']} allowClear />
+        </FormItem>
+        <FormItem
+          required
+          label={t['searchTable.columns.prize_desc']}
+          field={'prize_desc'}
         >
           <Input placeholder={t['searchForm.placeholder']} allowClear />
         </FormItem>

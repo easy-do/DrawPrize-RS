@@ -61,7 +61,6 @@ function SearchForm(props: {
         <Row gutter={24}>
           <Col span={colSpan}>
             <Form.Item
-              required
               label={t['searchTable.columns.parent_id']}
               field={'parent_id'}
             >
@@ -79,7 +78,6 @@ function SearchForm(props: {
 
           <Col span={colSpan}>
             <Form.Item
-              required
               label={t['searchTable.columns.resource_name']}
               field={'resource_name'}
             >
@@ -88,7 +86,6 @@ function SearchForm(props: {
           </Col>
           <Col span={colSpan}>
             <Form.Item
-              required
               label={t['searchTable.columns.resource_code']}
               field={'resource_code'}
             >
@@ -97,7 +94,6 @@ function SearchForm(props: {
           </Col>
           <Col span={colSpan}>
             <Form.Item
-              required
               label={t['searchTable.columns.resource_type']}
               field={'resource_type'}
             >
@@ -119,7 +115,6 @@ function SearchForm(props: {
           </Col>
           <Col span={colSpan}>
             <Form.Item
-              required
               defaultValue={'false'}
               label={t['searchTable.columns.resource_root']}
               field={'resource_root'}
@@ -142,7 +137,6 @@ function SearchForm(props: {
           </Col>
           <Col span={colSpan}>
             <Form.Item
-              required
               defaultValue={'false'}
               label={t['searchTable.columns.resource_action']}
               field={'resource_action'}
@@ -170,7 +164,6 @@ function SearchForm(props: {
           </Col>
           <Col span={colSpan}>
             <Form.Item
-              required
               defaultValue={'true'}
               label={t['searchTable.columns.status']}
               field={'status'}

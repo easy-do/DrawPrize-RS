@@ -12,20 +12,14 @@ import { GlobalContext } from '@/context';
 import { useContext, useEffect, useRef } from 'react';
 import React from 'react';
 import FormItem from '@arco-design/web-react/es/Form/form-item';
-import {
-  getPrizePoolInfo,
-  updatePrizePool,
-} from '@/api/prizePool';
+import { getPrizePoolInfo, updatePrizePool } from '@/api/prizePool';
 
 function UpdatePage(props: { id: number; visible; setVisible; callback }) {
-  const TextArea = Input.TextArea;
-
   const formRef = useRef<FormInstance>();
 
   const { lang } = useContext(GlobalContext);
 
   const [loading, setLoading] = React.useState(false);
-
 
   //加载数据
   function fetchData() {
@@ -76,7 +70,7 @@ function UpdatePage(props: { id: number; visible; setVisible; callback }) {
 
   return (
     <Modal
-      style={{ width: '35%'}}
+      style={{ width: '35%' }}
       title={t['searchTable.update.title']}
       visible={props.visible}
       onOk={() => {

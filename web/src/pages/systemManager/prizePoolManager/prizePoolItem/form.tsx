@@ -5,12 +5,12 @@ import locale from './locale';
 import useLocale from '@/utils/useLocale';
 import { IconRefresh, IconSearch } from '@arco-design/web-react/icon';
 import styles from './style/index.module.less';
-import { API_HTTP_METHOD } from './constants';
 
 const { Row, Col } = Grid;
 const { useForm } = Form;
 
 function SearchForm(props: {
+  prizePoolId: number;
   onSearch: (values: Record<string, any>) => void;
 }) {
   const { lang } = useContext(GlobalContext);
@@ -20,13 +20,18 @@ function SearchForm(props: {
 
   const handleSubmit = () => {
     const values = form.getFieldsValue();
+    values.pool_id = props.prizePoolId;
     props.onSearch(values);
   };
 
   const handleReset = () => {
     form.resetFields();
-    props.onSearch({});
+    props.onSearch({ pool_id: props.prizePoolId });
   };
+
+  useEffect(() => {
+    handleReset();
+  }, [props.prizePoolId]);
 
   const colSpan = lang === 'zh-CN' ? 8 : 12;
 
@@ -42,68 +47,60 @@ function SearchForm(props: {
         <Row gutter={24}>
           <Col span={colSpan}>
             <Form.Item
-              required
-              label={t['searchTable.columns.pool_name']}
-              field={'pool_name'}
+              label={t['searchTable.columns.prize_name']}
+              field={'prize_name'}
             >
               <Input placeholder={t['searchForm.placeholder']} allowClear />
             </Form.Item>
           </Col>
-          {/* <Col span={colSpan}>
-            <Form.Item
-              required
-              label={t['searchTable.columns.pool_type']}
-              field={'pool_type'}
-            >
+          <Col span={colSpan}>
+            <Form.Item label={t['searchTable.columns.icon']} field={'icon'}>
               <Input placeholder={t['searchForm.placeholder']} allowClear />
             </Form.Item>
-          </Col> */}
+          </Col>
           <Col span={colSpan}>
-            <Form.Item
-              required
-              label={t['searchTable.columns.share_pool']}
-              field={'share_pool'}
-            >
-              <Select
+            <Form.Item label={t['searchTable.columns.level']} field={'level'}>
+              <Input
+                type="number"
                 placeholder={t['searchForm.placeholder']}
-                options={[
-                  {
-                    label: t['searchTable.columns.yes'],
-                    value: 'true',
-                  },
-                  {
-                    label: t['searchTable.columns.no'],
-                    value: 'false',
-                  },
-                ]}
                 allowClear
               />
             </Form.Item>
           </Col>
-          {/* <Col span={colSpan}>
-            <Form.Item
-              required
-              label={t['searchTable.columns.strategy']}
-              field={'strategy'}
-            >
-              <Input placeholder={t['searchForm.placeholder']} allowClear />
-            </Form.Item>
-          </Col> */}
           <Col span={colSpan}>
             <Form.Item
-              required
-              label={t['searchTable.columns.pool_desc']}
-              field={'pool_desc'}
+              label={t['searchTable.columns.level_name']}
+              field={'level_name'}
             >
               <Input placeholder={t['searchForm.placeholder']} allowClear />
             </Form.Item>
           </Col>
           <Col span={colSpan}>
             <Form.Item
-              required
-              label={t['searchTable.columns.status']}
-              field={'status'}
+              label={t['searchTable.columns.probability']}
+              field={'probability'}
             >
+              <Input placeholder={t['searchForm.placeholder']} allowClear />
+            </Form.Item>
+          </Col>
+          <Col span={colSpan}>
+            <Form.Item
+              label={t['searchTable.columns.quantity']}
+              field={'quantity'}
+            >
+              <Input placeholder={t['searchForm.placeholder']} allowClear />
+            </Form.Item>
+          </Col>
+          <Col span={colSpan}>
+            <Form.Item
+              label={t['searchTable.columns.prize_desc']}
+              field={'prize_desc'}
+            >
+              <Input placeholder={t['searchForm.placeholder']} allowClear />
+            </Form.Item>
+          </Col>
+          <Col span={colSpan}>
+            <Form.Item label={t['searchTable.columns.status']} field={'status'}>
               <Select
                 placeholder={t['searchForm.placeholder']}
                 options={[
