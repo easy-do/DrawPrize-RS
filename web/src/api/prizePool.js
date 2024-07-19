@@ -7,4 +7,5 @@ export const getPrizePoolInfo = (id) => get("/api/prize_pool/info/"+id);
 export const getPrizePoolPage = (param) => postRequestBody("/api/prize_pool/page",param);
 export const addPrizePool = (param) => postRequestBody("/api/prize_pool/add",param);
 export const updatePrizePool = (param) => postRequestBody("/api/prize_pool/update",param);
+export const createLivePool = (id) => get("/api/prize_pool/create_live_pool/"+id);
 

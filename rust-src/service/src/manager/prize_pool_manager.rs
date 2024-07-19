@@ -1,5 +1,7 @@
+use std::str::FromStr;
+
 use chrono::Local;
-use sea_orm::{ActiveModelTrait, ColumnTrait, DbConn, EntityTrait, NotSet, PaginatorTrait, QueryFilter};
+use sea_orm::{ActiveModelTrait, ColumnTrait, DbConn, EntityTrait, NotSet, PaginatorTrait, QueryFilter, QueryOrder};
 use sea_orm::ActiveValue::Set;
 
 use common::error::MyError;
@@ -52,12 +54,6 @@ pub async fn update_prize_pool_data(db: &DbConn, form: prize_pool::Model) -> Res
     if form.status.is_some() {
         entity.status = Set(form.status);
     }
-    if form.create_time.is_some() {
-        entity.create_time = Set(form.create_time);
-    }
-    if form.update_time.is_some() {
-        entity.update_time = Set(form.update_time);
-    }
     if form.pool_desc.is_some() {
         entity.pool_desc = Set(form.pool_desc);
     }
@@ -66,13 +62,13 @@ pub async fn update_prize_pool_data(db: &DbConn, form: prize_pool::Model) -> Res
     Ok(result.id)
 }
 
-pub async fn delete_prize_pool_data(db: &DbConn, user_id: i64) -> Result<bool, MyError> {
-    let res = PrizePool::delete_by_id(user_id).exec(db).await?;
+pub async fn delete_prize_pool_data(db: &DbConn, id: i64) -> Result<bool, MyError> {
+    let res = PrizePool::delete_by_id(id).exec(db).await?;
     Ok(res.rows_affected == 1)
 }
 
-pub async fn get_prize_pool_data(db: &DbConn, user_id: i64) -> Result<Option<prize_pool::Model>, MyError> {
-    let res = PrizePool::find_by_id(user_id).one(db).await?;
+pub async fn get_prize_pool_data(db: &DbConn, id: i64) -> Result<Option<prize_pool::Model>, MyError> {
+    let res = PrizePool::find_by_id(id).one(db).await?;
     Ok(res)
 }
 
@@ -97,6 +93,15 @@ pub async fn page(db: &DbConn, prize_pool_page: PrizePoolPage) -> Result<PageRes
     let share_pool = prize_pool_page.share_pool;
     if share_pool.is_some() {
         find = find.filter(prize_pool::Column::SharePool.eq(share_pool.unwrap()));
+    }
+
+    let sorter = page_data.sorter;
+    if sorter.is_some() {
+        let sorter = sorter.unwrap();
+        let field = prize_pool::Column::from_str(sorter.field.as_str()).or_else(|e| {
+            Err(MyError::DBError(format!("获取排序字段失败：{}",e.to_string())))
+        })?;
+        find = find.order_by(field,sorter.order());
     }
 
     let paginator = find

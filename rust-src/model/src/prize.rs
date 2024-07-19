@@ -47,3 +47,30 @@ pub struct PrizePoolPage {
     pub status: Option<bool>,
     pub pool_desc: Option<String>,
 }
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct LivePrizePoolPage {
+    pub page_data: PageData,
+    pub pool_id: Option<i64>,
+    pub pool_name: Option<String>,
+    pub pool_type: Option<i32>,
+    pub share_pool: Option<bool>,
+    pub strategy: Option<i32>,
+    pub status: Option<bool>,
+    pub pool_desc: Option<String>,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct LivePrizePoolItemPage {
+    pub page_data: PageData,
+    pub live_id: Option<i64>,
+    pub prize_id: Option<i64>,
+    pub prize_name: Option<String>,
+    pub icon: Option<String>,
+    pub level: Option<i32>,
+    pub level_name: Option<String>,
+    pub probability: Option<i32>,
+    pub remaining_quantity: Option<i32>,
+    pub status: Option<bool>,
+    pub prize_desc: Option<String>,
+}

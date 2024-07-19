@@ -6,8 +6,8 @@ import dayjs from 'dayjs';
 const { Text } = Typography;
 
 export const DefaultSorter = {
-  field: 'id',
-  direction: 'create_time',
+  field: 'create_time',
+  direction: 'desc',
 };
 
 export function getColumns(
@@ -112,23 +112,6 @@ export function getColumns(
           </Button>
         </PermissionWrapper>,
         <PermissionWrapper
-          key={'update'}
-          requiredPermissions={[
-            {
-              resource: 'prize_pool_manager',
-              actions: ['api_prize_pool_update'],
-            },
-          ]}
-        >
-          <Button
-            type="text"
-            size="small"
-            onClick={() => callback(record, 'update')}
-          >
-            {t['searchTable.columns.operations.update']}
-          </Button>
-        </PermissionWrapper>,
-        <PermissionWrapper
           key={'item_manager'}
           requiredPermissions={[{ resource: 'prize_pool_item_manager' }]}
         >
@@ -138,6 +121,18 @@ export function getColumns(
             onClick={() => callback(record, 'item_manager')}
           >
             {t['searchTable.columns.operations.item_manager']}
+          </Button>
+        </PermissionWrapper>,
+        <PermissionWrapper
+          key={'enable_live'}
+          requiredPermissions={[{ resource: 'prize_pool_manager' }]}
+        >
+          <Button
+            type="text"
+            size="small"
+            onClick={() => callback(record, 'enable_live')}
+          >
+            {t['searchTable.columns.operations.create_live_pool']}
           </Button>
         </PermissionWrapper>,
         <PermissionWrapper

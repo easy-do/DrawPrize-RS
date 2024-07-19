@@ -168,7 +168,7 @@ function PrizePoolItemPage(props: { prizePoolId: number }) {
       <SearchForm prizePoolId={props.prizePoolId} onSearch={handleSearch} />
       <PermissionWrapper
         requiredPermissions={[
-          { resource: 'user_manager', actions: ['api_user_add'] },
+          { resource: 'prize_pool_item_manager', actions: ['api_prize_pool_item_add'] },
         ]}
       >
         <div className={styles['button-group']}>

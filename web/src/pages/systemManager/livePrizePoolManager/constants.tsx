@@ -18,34 +18,30 @@ export function getColumns(
     {
       title: t['searchTable.columns.id'],
       dataIndex: 'id',
-      sorter: true,
       render: (value) => <Text copyable>{value}</Text>,
     },
     {
-      title: t['searchTable.columns.prize_name'],
-      dataIndex: 'prize_name',
-      ellipsis: true,
+      title: t['searchTable.columns.pool_id'],
+      dataIndex: 'pool_id',
     },
     {
-      title: t['searchTable.columns.level'],
-      dataIndex: 'level',
-      ellipsis: true,
+      title: t['searchTable.columns.pool_name'],
+      dataIndex: 'pool_name',
     },
+    // {
+    //   title: t['searchTable.columns.pool_type'],
+    //   dataIndex: 'pool_type',
+    // },
     {
-      title: t['searchTable.columns.level_name'],
-      dataIndex: 'level_name',
-      ellipsis: true,
+      title: t['searchTable.columns.share_pool'],
+      dataIndex: 'share_pool',
+      render: (value) =>
+        value ? t['searchTable.columns.yes'] : t['searchTable.columns.no'],
     },
-    {
-      title: t['searchTable.columns.probability'],
-      dataIndex: 'probability',
-      ellipsis: true,
-    },
-    {
-      title: t['searchTable.columns.quantity'],
-      dataIndex: 'quantity',
-      ellipsis: true,
-    },
+    // {
+    //   title: t['searchTable.columns.strategy'],
+    //   dataIndex: 'strategy',
+    // },
     {
       title: t['searchTable.columns.status'],
       dataIndex: 'status',
@@ -75,8 +71,8 @@ export function getColumns(
       },
     },
     {
-      title: t['searchTable.columns.prize_desc'],
-      dataIndex: 'prize_desc',
+      title: t['searchTable.columns.pool_desc'],
+      dataIndex: 'pool_desc',
       ellipsis: true,
     },
     {
@@ -87,7 +83,10 @@ export function getColumns(
         <PermissionWrapper
           key={'view'}
           requiredPermissions={[
-            { resource: 'rprize_pool_item_manager', actions: ['api_prize_pool_item_info'] },
+            {
+              resource: 'live_prize_pool_manager',
+              actions: ['api_live_prize_pool_info'],
+            },
           ]}
         >
           <Button
@@ -101,7 +100,10 @@ export function getColumns(
         <PermissionWrapper
           key={'update'}
           requiredPermissions={[
-            { resource: 'prize_pool_item_manager', actions: ['api_prize_pool_item_update'] },
+            {
+              resource: 'live_prize_pool_manager',
+              actions: ['api_live_prize_pool_update'],
+            },
           ]}
         >
           <Button
@@ -113,22 +115,16 @@ export function getColumns(
           </Button>
         </PermissionWrapper>,
         <PermissionWrapper
-          key={'delete'}
-          requiredPermissions={[
-            { resource: 'prize_pool_item_manager', actions: ['api_prize_pool_item_delete'] },
-          ]}
+          key={'item_manager'}
+          requiredPermissions={[{ resource: 'live_prize_pool_item_manager' }]}
         >
-          <Popconfirm
-            focusLock
-            title={t['option.delete.confirm.title']}
-            onOk={() => {
-              callback(record, 'delete');
-            }}
+          <Button
+            type="text"
+            size="small"
+            onClick={() => callback(record, 'item_manager')}
           >
-            <Button status="danger" type="text" size="small">
-              {t['searchTable.columns.operations.delete']}
-            </Button>
-          </Popconfirm>
+            {t['searchTable.columns.operations.item_manager']}
+          </Button>
         </PermissionWrapper>,
       ],
     },

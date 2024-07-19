@@ -49,6 +49,13 @@ export const routes: IRoute[] = [
           { resource: 'prize_pool_manager', actions: [] },
         ],
       },
+      {
+        name: 'menu.livePrizePoolManager',
+        key: 'systemManager/livePrizePoolManager',
+        requiredPermissions: [
+          { resource: 'live_prize_pool_manager', actions: [] },
+        ],
+      },
     ],
   },
   {

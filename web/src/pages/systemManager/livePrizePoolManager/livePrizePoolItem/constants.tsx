@@ -42,8 +42,8 @@ export function getColumns(
       ellipsis: true,
     },
     {
-      title: t['searchTable.columns.quantity'],
-      dataIndex: 'quantity',
+      title: t['searchTable.columns.remaining_quantity'],
+      dataIndex: 'remaining_quantity',
       ellipsis: true,
     },
     {
@@ -87,7 +87,7 @@ export function getColumns(
         <PermissionWrapper
           key={'view'}
           requiredPermissions={[
-            { resource: 'rprize_pool_item_manager', actions: ['api_prize_pool_item_info'] },
+            { resource: 'live_prize_pool_item_manager', actions: ['api_live_prize_pool_item_info'] },
           ]}
         >
           <Button
@@ -101,7 +101,7 @@ export function getColumns(
         <PermissionWrapper
           key={'update'}
           requiredPermissions={[
-            { resource: 'prize_pool_item_manager', actions: ['api_prize_pool_item_update'] },
+            { resource: 'live_prize_pool_manager', actions: ['api_live_prize_pool_item_update'] },
           ]}
         >
           <Button
@@ -111,24 +111,6 @@ export function getColumns(
           >
             {t['searchTable.columns.operations.update']}
           </Button>
-        </PermissionWrapper>,
-        <PermissionWrapper
-          key={'delete'}
-          requiredPermissions={[
-            { resource: 'prize_pool_item_manager', actions: ['api_prize_pool_item_delete'] },
-          ]}
-        >
-          <Popconfirm
-            focusLock
-            title={t['option.delete.confirm.title']}
-            onOk={() => {
-              callback(record, 'delete');
-            }}
-          >
-            <Button status="danger" type="text" size="small">
-              {t['searchTable.columns.operations.delete']}
-            </Button>
-          </Popconfirm>
         </PermissionWrapper>,
       ],
     },

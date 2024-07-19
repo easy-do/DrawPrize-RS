@@ -3,27 +3,19 @@ import {
   Table,
   Card,
   PaginationProps,
-  Button,
-  Space,
   Typography,
-  Notification,
   Modal,
 } from '@arco-design/web-react';
-import PermissionWrapper from '@/components/PermissionWrapper';
-import { IconPlus } from '@arco-design/web-react/icon';
 import useLocale from '@/utils/useLocale';
 import SearchForm from './form';
 import locale from './locale';
-import styles from './style/index.module.less';
 import { DefaultSorter, getColumns } from './constants';
-import { createLivePool, getPrizePoolPage, removePrizePool } from '@/api/prizePool';
+import { getLivePrizePoolPage } from '@/api/livePrizePool';
 
 import { v4 } from 'uuid';
-import AddPage from './addPage';
 import InfoPage from './infoPage';
 import UpdatePage from './updatePage';
-import PrizePoolItemPage from './prizePoolItem';
-import router from 'next/router';
+import LivePrizePoolItemPage from './livePrizePoolItem';
 
 const { Title } = Typography;
 
@@ -44,17 +36,9 @@ function SearchTable() {
     if (type === 'update') {
       updateData(record.id);
     }
-    //删除
-    if (type === 'delete') {
-      deleteData(record.id);
-    }
     //奖品管理
     if (type === 'item_manager') {
       itemManager(record.id);
-    }
-    //开启活动
-    if (type === 'enable_live') {
-      enableLive(record.id);
     }
   };
 
@@ -80,41 +64,15 @@ function SearchTable() {
     setUpdateVisibled(true);
   }
 
-  //删除
-  function deleteData(id) {
-    removePrizePool(id).then((res) => {
-      const { success, message } = res.data;
-      if (success) {
-        Notification.success({ content: message, duration: 1000 });
-        fetchData();
-      } else {
-        Notification.error({ content: message, duration: 1000 });
-        fetchData();
-      }
-    });
-  }
 
   //奖品管理
   const [itemManagerVisible, setItemManagerVisibled] = useState(false);
-  const [prizePollId, setPrizePollId] = useState();
+  const [livePrizePoolId, setLivePrizePoolId] = useState();
   function itemManager(id) {
-    setPrizePollId(id);
+    setLivePrizePoolId(id);
     setItemManagerVisibled(true);
   }
 
-  //开启活动
-  function enableLive(id){
-    createLivePool(id).then((res) => {
-      const { success, message } = res.data;
-      if (success) {
-        Notification.success({ content: message, duration: 1000 });
-        router.push('/systemManager/livePrizePoolManager');
-      } else {
-        Notification.error({ content: message, duration: 1000 });
-        fetchData();
-      }
-    });
-  }
 
   const columns = useMemo(() => getColumns(t, tableCallback), [t]);
 
@@ -145,7 +103,7 @@ function SearchTable() {
   function fetchData() {
     const { current, pageSize } = pagination;
     setLoading(true);
-    getPrizePoolPage({
+    getLivePrizePoolPage({
       page_data: {
         page: current,
         page_size: pageSize,
@@ -204,23 +162,6 @@ function SearchTable() {
     <Card>
       <Title heading={6}>{t['menu.list.searchTable']}</Title>
       <SearchForm onSearch={handleSearch} />
-      <PermissionWrapper
-        requiredPermissions={[
-          { resource: 'prize_pool_manager', actions: ['api_prize_pool_add'] },
-        ]}
-      >
-        <div className={styles['button-group']}>
-          <Space>
-            <Button
-              type="primary"
-              icon={<IconPlus />}
-              onClick={() => tableCallback(null, 'add')}
-            >
-              {t['searchTable.operations.add']}
-            </Button>
-          </Space>
-        </div>
-      </PermissionWrapper>
       <Table
         rowKey="id"
         loading={loading}
@@ -228,11 +169,6 @@ function SearchTable() {
         pagination={pagination}
         columns={columns}
         data={data}
-      />
-      <AddPage
-        visible={addVisible}
-        setVisible={setAddVisible}
-        callback={fetchData}
       />
       <InfoPage
         id={viewInfoId}
@@ -253,7 +189,7 @@ function SearchTable() {
         footer={null}
         maskClosable={false}
       >
-        <PrizePoolItemPage prizePoolId={prizePollId} />
+        <LivePrizePoolItemPage livePrizePoolId={livePrizePoolId} />
       </Modal>
     </Card>
   );

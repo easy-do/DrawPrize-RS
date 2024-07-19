@@ -21,7 +21,7 @@ impl MigrationTrait for Migration {
             resource_root: Set(Some(true)),
             resource_action: Set(Some(false)),
             order_number: Set(Some(0)),
-            url: Set(Some("prizePollItemManager".to_string())),
+            url: Set(Some("prizePoolItemManager".to_string())),
             api_path: NotSet,
             api_http_method: Default::default(),
             role: NotSet,

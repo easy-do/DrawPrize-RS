@@ -180,7 +180,7 @@ function SearchTable() {
       <SearchForm onSearch={handleSearch} />
       <PermissionWrapper
         requiredPermissions={[
-          { resource: 'user_manager', actions: ['api_user_add'] },
+          { resource: 'role_manager', actions: ['api_role_add'] },
         ]}
       >
         <div className={styles['button-group']}>
