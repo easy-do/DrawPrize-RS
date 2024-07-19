@@ -17,22 +17,26 @@ pub fn general_routes(cfg: &mut web::ServiceConfig) {
 }
 
 pub fn live_prize_pool_item_routes(cfg: &mut web::ServiceConfig) {
-    cfg.service(user_controller::list)
+    cfg.service(live_prize_pool_item_controller::list)
         .service(live_prize_pool_item_controller::update)
         .service(live_prize_pool_item_controller::info)
         .service(live_prize_pool_item_controller::page);
 }
 
 pub fn live_prize_pool_routes(cfg: &mut web::ServiceConfig) {
-    cfg.service(user_controller::list)
+    cfg.service(live_prize_pool_controller::list)
+        .service(live_prize_pool_controller::select_list)
         .service(live_prize_pool_controller::update)
         .service(live_prize_pool_controller::info)
         .service(live_prize_pool_controller::page)
-        .service(live_prize_pool_controller::draw);
+        .service(live_prize_pool_controller::draw)
+        .service(live_prize_pool_controller::top_draw)
+        .service(live_prize_pool_controller::prize_item_list)
+        .service(live_prize_pool_controller::draw_history);
 }
 
 pub fn prize_pool_item_routes(cfg: &mut web::ServiceConfig) {
-    cfg.service(user_controller::list)
+    cfg.service(prize_pool_item_controller::list)
         .service(prize_pool_item_controller::add)
         .service(prize_pool_item_controller::update)
         .service(prize_pool_item_controller::delete)
@@ -41,7 +45,7 @@ pub fn prize_pool_item_routes(cfg: &mut web::ServiceConfig) {
 }
 
 pub fn prize_pool_routes(cfg: &mut web::ServiceConfig) {
-    cfg.service(user_controller::list)
+    cfg.service(prize_pool_controller::list)
         .service(prize_pool_controller::add)
         .service(prize_pool_controller::update)
         .service(prize_pool_controller::delete)

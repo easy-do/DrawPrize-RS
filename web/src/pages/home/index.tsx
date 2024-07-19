@@ -1,21 +1,111 @@
 import React, { useEffect, useState } from 'react';
 import useLocale from '@/utils/useLocale';
 import locale from './locale';
-import { Button, Card, Carousel, Divider, Grid, Link, List, Notification, } from '@arco-design/web-react';
-import { drawLivePrizePool } from '@/api/livePrizePool';
+import dayjs from 'dayjs';
+import {
+  Avatar,
+  Button,
+  Card,
+  Grid,
+  Link,
+  List,
+  Modal,
+  Notification,
+  Select,
+} from '@arco-design/web-react';
+import {
+  drawLivePrizePool,
+  getDrawHistory,
+  getLivePrizePoolSelectList,
+  getPrizeItemList,
+  topDraw,
+} from '@/api/livePrizePool';
+import ScrollableCard from './ScrollableCard';
+import ScrollableCardList from './ScrollableCardList';
 const Row = Grid.Row;
 const Col = Grid.Col;
 
 export default function Welcome() {
   const t = useLocale(locale);
 
-  const extra = <Link>More</Link>;
+  //预览奖池
+  const [viewPoolItem, setviewPoolItem] = useState(false);
 
-  const imageSrc = [
-    'https://img0.baidu.com/it/u=3247766294,3714224757&fm=253&fmt=auto&app=138&f=JPEG?w=610&h=343',
-    'https://img1.baidu.com/it/u=4113580494,1754073909&fm=253&fmt=auto&app=138&f=JPEG?w=650&h=360',
-    'https://img1.baidu.com/it/u=2128492579,763816667&fm=253&fmt=auto&app=138&f=JPEG?w=780&h=360',
-  ];
+  //抽奖结果
+  const [prizeResultVisible, setPrizeResultVisible] = useState(false);
+  const [prizeResult, setPrizeResult] = useState([]);
+
+  //抽奖排名
+  const [topDrawData, setTopDrawData] = useState([]);
+  //所有开启的奖池
+  const [poolSelectData, setPoolSelectData] = useState([]);
+  //当前奖池
+  const [currentPoolId, setCurrentPoolId] = useState(1);
+  //当前奖池物品
+  const [currentPoolItemData, setCurrentPoolItemData] = useState([]);
+  //最新中奖信息
+  const [drawHistoryData, setDrawHistoryData] = useState([]);
+
+  function getDrawHistoryData() {
+    getDrawHistory().then((res) => {
+      const { success, data } = res.data;
+      if (success) {
+        setDrawHistoryData(data.map((item, index) => (
+          dayjs(item.create_time).format('YYYY-MM-DD : ') + item.user_name+'  通过 '+item.action+' 抽获得 '+ item.prize_ids.split("|").map((item)=>{
+           const a =  item.split(',');
+           return a[1] + "X1";
+           
+          }).join(","))
+        ));
+      }
+    });
+  }
+  
+
+
+  function poolSelectOnChange(value) {
+    setCurrentPoolId(value);
+    getCurrentPoolItemData(value);
+    getTopDrawData();
+  }
+
+  function getCurrentPoolItemData(currentPoolId) {
+    getPrizeItemList(currentPoolId).then((res) => {
+      const { success, data } = res.data;
+      if (success) {
+        setCurrentPoolItemData(data);
+      }
+    });
+  }
+
+  function getTopDrawData() {
+    topDraw().then((res) => {
+      const { success, data } = res.data;
+      if (success) {
+        setTopDrawData(data);
+      }
+    });
+  }
+
+  useEffect(() => {
+    getDrawHistoryData();
+    getTopDrawData();
+    getLivePrizePoolSelectList().then((res) => {
+      const { success, data } = res.data;
+      if (success) {
+        setPoolSelectData(
+          data.map((item) => {
+            return {
+              label: item.pool_name,
+              value: item.id,
+            };
+          })
+        );
+        setCurrentPoolId(data ? data[0].id : 1);
+        getCurrentPoolItemData(data ? data[0].id : 1);
+      }
+    });
+  }, []);
 
   return (
     <div
@@ -26,112 +116,121 @@ export default function Welcome() {
         backgroundColor: 'var(--color-fill-2)',
       }}
     >
-      <Row
-        gutter={20}
-        style={{ marginBottom: 20 }}
-      >
+      <Row gutter={20} style={{ marginBottom: 20 }}>
         <Col>
-          <Card
-            title='公告'
-            bordered={false}
-            style={{
-              width: '100%',
-            }}
-          >
-            恭喜用户xxxxx获得一等奖
-            恭喜用户xxxxx获得一等奖
-            恭喜用户xxxxx获得一等奖
-          </Card>
+          <ScrollableCard content={drawHistoryData}/>
         </Col>
-
       </Row>
 
-      <Row
-        gutter={20}
-        style={{ marginBottom: 20 }}
-      >
-        <Col span={16}>
+      <Row gutter={20} style={{ marginBottom: 20 }}>
+        <Col span={20}>
           <Card
-            title='抽奖'
-            extra={<Link>奖池预览</Link>}
+            title="抽奖"
+            extra={
+              <>
+                <Select placeholder="选择奖池" options={poolSelectData} onChange={poolSelectOnChange} />
+              </>
+            }
             bordered={false}
             style={{ width: '100%' }}
-            actions={
-              [
-               <Button type='secondary' 
-               onClick={
-                ()=>drawLivePrizePool(1,1).then((res)=>{
-                  const { success, message, data } = res.data;
-                  if (success) {
-                    Notification.success({ content: data, duration: 1000 });
-                  } else {
-                    Notification.error({ content: message, duration: 1000 });
-                  }
-                })
-              } 
-               shape='round'>单抽</Button>,
-               <Button type='primary' 
-               onClick={
-                ()=>drawLivePrizePool(1,10).then((res)=>{
-                  const { success, message, data } = res.data;
-                  if (success) {
-                    Notification.success({ content: data.join(','), duration: 3000 });
-                  } else {
-                    Notification.error({ content: message, duration: 1000 });
-                  }
-                })
-              } 
-               shape='round'>十连抽</Button>
-              ]
-            }
+            actions={[
+              <Button
+                key={'one'}
+                type="secondary"
+                onClick={() =>
+                  drawLivePrizePool(currentPoolId, 1).then((res) => {
+                    const { success, message, data } = res.data;
+                    if (success) {
+                      setPrizeResult(data);
+                      setPrizeResultVisible(true);
+                      getTopDrawData();
+                      getCurrentPoolItemData(currentPoolId);
+                      getDrawHistoryData();
+                    } else {
+                      Notification.error({ content: message, duration: 1000 });
+                    }
+                  })
+                }
+                shape="round"
+              >
+                单抽
+              </Button>,
+              <Button
+                key={'two'}
+                type="primary"
+                onClick={() =>
+                  drawLivePrizePool(currentPoolId, 10).then((res) => {
+                    const { success, message, data } = res.data;
+                    if (success) {
+                      setPrizeResult(data);
+                      setPrizeResultVisible(true);
+                      getTopDrawData();
+                      getCurrentPoolItemData(currentPoolId);
+                      getDrawHistoryData();
+                    } else {
+                      Notification.error({ content: message, duration: 1000 });
+                    }
+                  })
+                }
+                shape="round"
+              >
+                十连抽
+              </Button>,
+            ]}
           >
-            <Carousel
-              autoPlay
-              animation='card'
-              showArrow='never'
-              indicatorPosition='outer'
-              style={{ width: '100%', height: 240 }}
-              moveSpeed={1}
-            >
-              {imageSrc.map((src, index) => (
-                <div
-                  key={index}
-                  style={{ width: '60%' }}
-                >
-                  <img
-                    src={src}
-                    style={{ width: '100%', height: '100%' }}
-                  />
-                </div>
-              ))}
-            </Carousel>
+          <ScrollableCardList content={currentPoolItemData}/>
           </Card>
         </Col>
-        <Col span={8}>
+        <Col span={4}>
           <Card
-            title='抽奖排行'
+            title="排行榜"
             bordered={false}
             style={{ width: '100%' }}
-            size='small'
+            size="small"
           >
             <List
-              dataSource={[
-                '张三  10次.',
-                '张三  9.',
-                '张三  8.',
-                '张三  7.',
-                '张三  6.',
-                '张三  5.',
-                '张三  4.',
-                '张三  3.',
-                '张三  2.',
-                '张三  1.',
-              ]}
-              render={(item, index) => <List.Item key={index}>{item}</List.Item>}
+              style={{minHeight:'550px', maxHeight:'550px'}} 
+              dataSource={topDrawData}
+              render={(item, index) => (
+                <List.Item.Meta
+                  key={index}
+                  avatar={<Avatar shape="square">U</Avatar>}
+                  title={<div>{'第' + (index + 1) + '名:'} <span style={{ color: 'blue' }}>{item.user_name}</span></div>}
+                  description={
+                    <div>
+                      <span style={{ color: 'red' }}>{item.action}</span>
+                      次
+                    </div>
+                  }
+                />
+              )}
             />
           </Card>
         </Col>
       </Row>
+
+      <Modal
+        title={'抽奖结果'}
+        style={{ minWidth: '30%', minHeight: '30%' }}
+        visible={prizeResultVisible}
+        onCancel={() => setPrizeResultVisible(false)}
+        footer={null}
+      >
+        <List
+          style={{ minWidth: '30%', minHeight: '30%' }}
+          dataSource={prizeResult}
+          grid={{ gutter: 0, span: 8 }}
+          render={(item, index) => (
+              <List.Item.Meta
+                key={index}
+                avatar={<Avatar shape="square" size={90} >
+                  <img src={item.icon} />
+                </Avatar>}
+                title={item.prize_name}
+              />
+            )}
+        />
+      </Modal>
     </div>
   );
 }

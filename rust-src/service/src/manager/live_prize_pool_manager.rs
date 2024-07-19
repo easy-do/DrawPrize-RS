@@ -1,7 +1,7 @@
 use std::str::FromStr;
 
 use chrono::Local;
-use sea_orm::{ActiveModelTrait, ColumnTrait, DbConn, EntityTrait, NotSet, PaginatorTrait, QueryOrder};
+use sea_orm::{ActiveModelTrait, ColumnTrait, DbConn, EntityTrait, NotSet, PaginatorTrait, QueryOrder, QuerySelect};
 use sea_orm::ActiveValue::Set;
 use sea_orm::QueryFilter;
 
@@ -31,6 +31,16 @@ pub async fn create_live_pool(db: &DbConn, pool: prize_pool::Model, items: Vec<p
 pub async fn get_live_prize_pool_list(db: &DbConn) -> Result<Vec<live_prize_pool::Model>, MyError>  {
     let a = LivePrizePool::find()
         .filter(live_prize_pool::Column::Status.eq(true))
+        .all(db).await?;
+    Ok(a)
+}
+pub async fn get_live_prize_pool_select_list(db: &DbConn) -> Result<Vec<live_prize_pool::SelectList>, MyError>  {
+    let a = LivePrizePool::find()
+        .column(live_prize_pool::Column::Id)
+        .column(live_prize_pool::Column::PoolId)
+        .column(live_prize_pool::Column::PoolName)
+        .filter(live_prize_pool::Column::Status.eq(true))
+        .into_model::<live_prize_pool::SelectList>()
         .all(db).await?;
     Ok(a)
 }

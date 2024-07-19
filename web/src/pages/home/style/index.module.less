@@ -2,3 +2,21 @@
   background: var(--color-bg-2);
   padding: 20px;
 }
+
+
+/* 适用于Chrome, Safari, Opera */  
+.scrollbar-hidden::-webkit-scrollbar {  
+  display: none;  
+}  
+  
+/* 适用于Firefox */  
+.scrollbar-hidden {  
+  scrollbar-width: none; /* Firefox 64+ */  
+}  
+  
+/* 可选：为所有浏览器设置一个通用样式，虽然它不会隐藏滚动条，但可以设置容器样式 */  
+.scrollbar-hidden {  
+  -ms-overflow-style: none; /* IE 和 Edge */  
+  overflow-y: scroll; /* 确保内容可以滚动 */  
+  height: 200px; /* 或你需要的任何高度 */  
+}
