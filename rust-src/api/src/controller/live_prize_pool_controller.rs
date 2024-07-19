@@ -33,3 +33,10 @@ async fn update(app_state: web::Data<AppState>,
     let res = live_prize_pool_service::update(&app_state.db, form.into_inner()).await?;
     Ok(HttpResponse::Ok().json(JsonResult::ok(res)))
 }
+
+#[get("/api/live_prize_pool/draw/{live_id}/{draw_num}")]
+async fn draw(app_state: web::Data<AppState>,
+              params: web::Path<(i64,i64)>,) -> Result<HttpResponse, MyError> {
+    let res = live_prize_pool_service::draw(&app_state.db, params.0, params.1).await?;
+    Ok(HttpResponse::Ok().json(JsonResult::ok(res)))
+}

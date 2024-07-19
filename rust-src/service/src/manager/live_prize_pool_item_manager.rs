@@ -1,7 +1,7 @@
 use std::str::FromStr;
 
 use chrono::Local;
-use sea_orm::{ActiveModelTrait, ColumnTrait, DbConn, EntityTrait, NotSet, PaginatorTrait, QueryOrder};
+use sea_orm::{ActiveModelTrait, ColumnTrait, DbConn, EntityTrait, NotSet, Order, PaginatorTrait, QueryOrder};
 use sea_orm::ActiveValue::Set;
 use sea_orm::QueryFilter;
 
@@ -145,6 +145,7 @@ pub async fn page(db: &DbConn, page: LivePrizePoolItemPage) -> Result<PageResult
 pub async fn get_prize_pool_item_by_live_id(db: &DbConn, live_id: i64) -> Result<Vec<live_prize_pool_item::Model>, MyError> {
     let res = LivePrizePoolItem::find()
         .filter(live_prize_pool_item::Column::LiveId.eq(live_id))
+        .order_by(live_prize_pool_item::Column::Level,Order::Asc)
         .all(db).await?;
     Ok(res)
 }

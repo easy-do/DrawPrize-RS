@@ -101,7 +101,7 @@ export function getColumns(
         <PermissionWrapper
           key={'update'}
           requiredPermissions={[
-            { resource: 'live_prize_pool_manager', actions: ['api_live_prize_pool_item_update'] },
+            { resource: 'live_prize_pool_item_manager', actions: ['api_live_prize_pool_item_update'] },
           ]}
         >
           <Button

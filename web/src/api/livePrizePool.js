@@ -5,4 +5,5 @@ export const getLivePrizePoolList = () => get("/api/live_prize_pool/list");
 export const getLivePrizePoolInfo = (id) => get("/api/live_prize_pool/info/"+id);
 export const getLivePrizePoolPage = (param) => postRequestBody("/api/live_prize_pool/page",param);
 export const updateLivePrizePool = (param) => postRequestBody("/api/live_prize_pool/update",param);
+export const drawLivePrizePool = (live_id,draw_num) => get("/api/live_prize_pool/draw/"+live_id+"/"+draw_num);
 
