@@ -1,7 +1,7 @@
 use std::str::FromStr;
 
 use chrono::Local;
-use sea_orm::{ActiveModelTrait, ColumnTrait, DbConn, EntityTrait, NotSet, Order, PaginatorTrait, QueryOrder};
+use sea_orm::{ActiveModelTrait, ColumnTrait, DbConn, EntityTrait, NotSet, Order, PaginatorTrait, QueryOrder, QuerySelect};
 use sea_orm::ActiveValue::Set;
 use sea_orm::QueryFilter;
 
@@ -145,7 +145,23 @@ pub async fn page(db: &DbConn, page: LivePrizePoolItemPage) -> Result<PageResult
 pub async fn get_prize_pool_item_by_live_id(db: &DbConn, live_id: i64) -> Result<Vec<live_prize_pool_item::Model>, MyError> {
     let res = LivePrizePoolItem::find()
         .filter(live_prize_pool_item::Column::LiveId.eq(live_id))
+        .filter(live_prize_pool_item::Column::Status.eq(true))
         .order_by(live_prize_pool_item::Column::Level,Order::Asc)
+        .all(db).await?;
+    Ok(res)
+}
+
+pub async fn get_prize_pool_item_list_by_live_id(db: &DbConn, live_id: i64) -> Result<Vec<live_prize_pool_item::PoolItemList>, MyError> {
+    let res = LivePrizePoolItem::find()
+        .column(live_prize_pool_item::Column::Id)
+        .column(live_prize_pool_item::Column::LiveId)
+        .column(live_prize_pool_item::Column::PrizeName)
+        .column(live_prize_pool_item::Column::Icon)
+        .column(live_prize_pool_item::Column::RemainingQuantity)
+        .filter(live_prize_pool_item::Column::LiveId.eq(live_id))
+        .filter(live_prize_pool_item::Column::Status.eq(true))
+        .order_by(live_prize_pool_item::Column::Level,Order::Asc)
+        .into_model::<live_prize_pool_item::PoolItemList>()
         .all(db).await?;
     Ok(res)
 }

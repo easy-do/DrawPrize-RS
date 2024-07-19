@@ -52,6 +52,7 @@ function UpdatePage(props: { id: number; visible; setVisible; callback }) {
     formRef.current.validate().then((values) => {
       setLoading(true);
       values.status = values.status == 'true';
+      values.quantity = Number(values.quantity);
       updatePrizePoolItem(values)
         .then((res) => {
           const { success, message } = res.data;
