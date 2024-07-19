@@ -3088,6 +3088,7 @@ dependencies = [
  "lettre",
  "log",
  "model",
+ "rand",
  "sea-orm",
  "security",
  "serde_json",

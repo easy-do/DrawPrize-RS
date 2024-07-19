@@ -32,7 +32,6 @@ function AddPage(props: {
       setLoading(true);
       values.status = values.status == 'true';
       values.level = Number(values.level);
-      values.probability = Number(values.probability);
       values.quantity = Number(values.quantity);
       addPrizePoolItem(values)
         .then((res) => {

@@ -13,7 +13,7 @@ pub struct Model {
     pub icon: Option<String>,
     pub level: Option<i32>,
     pub level_name: Option<String>,
-    pub probability: Option<i32>,
+    pub probability: Option<String>,
     pub quantity: Option<i32>,
     pub status: Option<bool>,
     pub create_time: Option<DateTime>,

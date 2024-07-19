@@ -27,7 +27,8 @@ pub fn live_prize_pool_routes(cfg: &mut web::ServiceConfig) {
     cfg.service(user_controller::list)
         .service(live_prize_pool_controller::update)
         .service(live_prize_pool_controller::info)
-        .service(live_prize_pool_controller::page);
+        .service(live_prize_pool_controller::page)
+        .service(live_prize_pool_controller::draw);
 }
 
 pub fn prize_pool_item_routes(cfg: &mut web::ServiceConfig) {
