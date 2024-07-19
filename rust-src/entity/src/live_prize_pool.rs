@@ -10,9 +10,11 @@ pub struct Model {
     pub id: i64,
     pub pool_id: Option<i64>,
     pub pool_name: Option<String>,
+    pub share_pool: Option<bool>,
     pub status: Option<bool>,
     pub create_time: Option<DateTime>,
     pub update_time: Option<DateTime>,
+    pub pool_desc: Option<String>,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]

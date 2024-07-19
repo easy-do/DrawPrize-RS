@@ -1,4 +1,3 @@
-import React, { useContext, useEffect, useRef } from 'react';
 import {
   Form,
   FormInstance,
@@ -10,31 +9,50 @@ import {
 import locale from './locale';
 import useLocale from '@/utils/useLocale';
 import { GlobalContext } from '@/context';
-import { addPrizePoolItem } from '@/api/prizePoolItem';
+import { useContext, useEffect, useRef } from 'react';
+import React from 'react';
 import FormItem from '@arco-design/web-react/es/Form/form-item';
+import { getLivePrizePoolItemInfo, updateLivePrizePoolItem } from '@/api/livePrizePoolItem';
 
-function AddPage(props: {
-  visible;
-  setVisible;
-  prizePoolId;
-  callback: () => void;
-}) {
+function UpdatePage(props: { id: number; visible; setVisible; callback }) {
   const formRef = useRef<FormInstance>();
 
   const { lang } = useContext(GlobalContext);
 
-  const t = useLocale(locale);
-
   const [loading, setLoading] = React.useState(false);
 
+  //加载数据
+  function fetchData() {
+    if (props.id !== undefined && props.visible) {
+      setLoading(true);
+      getLivePrizePoolItemInfo(props.id)
+        .then((res) => {
+          const { success, data } = res.data;
+          if (success) {
+            data.status = data.status + '';
+            data.share_pool = data.share_pool + '';
+            formRef.current.setFieldsValue(data);
+          }
+          setLoading(false);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
+  }
+
+  useEffect(() => {
+    fetchData();
+  }, [props.id, props.visible]);
+
+  const t = useLocale(locale);
+
+  //提交修改
   const handleSubmit = () => {
     formRef.current.validate().then((values) => {
       setLoading(true);
       values.status = values.status == 'true';
-      values.level = Number(values.level);
-      values.probability = Number(values.probability);
-      values.quantity = Number(values.quantity);
-      addPrizePoolItem(values)
+      updateLivePrizePoolItem(values)
         .then((res) => {
           const { success, message } = res.data;
           if (success) {
@@ -49,14 +67,10 @@ function AddPage(props: {
     });
   };
 
-  useEffect(() => {
-    formRef.current?.setFieldsValue({ pool_id: props.prizePoolId });
-  }, [props.visible]);
-
   return (
     <Modal
-      title={t['searchTable.operations.add']}
       style={{ width: '35%' }}
+      title={t['searchTable.update.title']}
       visible={props.visible}
       onOk={() => {
         handleSubmit();
@@ -74,15 +88,8 @@ function AddPage(props: {
         labelCol={{ span: lang === 'en-US' ? 7 : 6 }}
         wrapperCol={{ span: lang === 'en-US' ? 17 : 18 }}
       >
-        <FormItem
-          disabled
-          required
-          hidden
-          initialValue={props.prizePoolId}
-          label={t['searchTable.columns.pool_id']}
-          field={'pool_id'}
-        >
-          <Input placeholder={t['searchForm.placeholder']} allowClear />
+        <FormItem field={'id'} hidden>
+          <Input />
         </FormItem>
         <FormItem
           required
@@ -121,8 +128,8 @@ function AddPage(props: {
         </FormItem>
         <FormItem
           required
-          label={t['searchTable.columns.quantity']}
-          field={'quantity'}
+          label={t['searchTable.columns.remaining_quantity']}
+          field={'remaining_quantity'}
         >
           <Input placeholder={t['searchForm.placeholder']} allowClear />
         </FormItem>
@@ -159,4 +166,4 @@ function AddPage(props: {
   );
 }
 
-export default AddPage;
+export default UpdatePage;

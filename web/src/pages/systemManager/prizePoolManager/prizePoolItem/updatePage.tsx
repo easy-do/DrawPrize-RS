@@ -52,7 +52,6 @@ function UpdatePage(props: { id: number; visible; setVisible; callback }) {
     formRef.current.validate().then((values) => {
       setLoading(true);
       values.status = values.status == 'true';
-      values.share_pool = values.share_pool == 'true';
       updatePrizePoolItem(values)
         .then((res) => {
           const { success, message } = res.data;
@@ -95,6 +94,7 @@ function UpdatePage(props: { id: number; visible; setVisible; callback }) {
         <FormItem
           disabled
           required
+          hidden
           label={t['searchTable.columns.pool_id']}
           field={'pool_id'}
         >

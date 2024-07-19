@@ -7,35 +7,24 @@ import {
   Space,
   Typography,
   Notification,
-  Modal,
 } from '@arco-design/web-react';
-import PermissionWrapper from '@/components/PermissionWrapper';
-import { IconPlus } from '@arco-design/web-react/icon';
 import useLocale from '@/utils/useLocale';
 import SearchForm from './form';
 import locale from './locale';
-import styles from './style/index.module.less';
 import { DefaultSorter, getColumns } from './constants';
-import { createLivePool, getPrizePoolPage, removePrizePool } from '@/api/prizePool';
+import { getLivePrizePoolItemPage } from '@/api/livePrizePoolItem';
 
 import { v4 } from 'uuid';
-import AddPage from './addPage';
 import InfoPage from './infoPage';
 import UpdatePage from './updatePage';
-import PrizePoolItemPage from './prizePoolItem';
-import router from 'next/router';
 
 const { Title } = Typography;
 
-function SearchTable() {
+function PrizePoolItemPage(props: { livePrizePoolId: number }) {
   const t = useLocale(locale);
 
   //表格列回调函数
   const tableCallback = async (record, type) => {
-    //新增
-    if (type === 'add') {
-      addData();
-    }
     //查看
     if (type === 'view') {
       viewInfo(record.id);
@@ -44,25 +33,8 @@ function SearchTable() {
     if (type === 'update') {
       updateData(record.id);
     }
-    //删除
-    if (type === 'delete') {
-      deleteData(record.id);
-    }
-    //奖品管理
-    if (type === 'item_manager') {
-      itemManager(record.id);
-    }
-    //开启活动
-    if (type === 'enable_live') {
-      enableLive(record.id);
-    }
   };
 
-  //添加
-  const [addVisible, setAddVisible] = useState(false);
-  function addData() {
-    setAddVisible(true);
-  }
 
   //查看
   const [viewVisible, setViewVisibled] = useState(false);
@@ -78,42 +50,6 @@ function SearchTable() {
   function updateData(id) {
     setUpdateInfoId(id);
     setUpdateVisibled(true);
-  }
-
-  //删除
-  function deleteData(id) {
-    removePrizePool(id).then((res) => {
-      const { success, message } = res.data;
-      if (success) {
-        Notification.success({ content: message, duration: 1000 });
-        fetchData();
-      } else {
-        Notification.error({ content: message, duration: 1000 });
-        fetchData();
-      }
-    });
-  }
-
-  //奖品管理
-  const [itemManagerVisible, setItemManagerVisibled] = useState(false);
-  const [prizePollId, setPrizePollId] = useState();
-  function itemManager(id) {
-    setPrizePollId(id);
-    setItemManagerVisibled(true);
-  }
-
-  //开启活动
-  function enableLive(id){
-    createLivePool(id).then((res) => {
-      const { success, message } = res.data;
-      if (success) {
-        Notification.success({ content: message, duration: 1000 });
-        router.push('/systemManager/livePrizePoolManager');
-      } else {
-        Notification.error({ content: message, duration: 1000 });
-        fetchData();
-      }
-    });
   }
 
   const columns = useMemo(() => getColumns(t, tableCallback), [t]);
@@ -139,13 +75,14 @@ function SearchTable() {
     JSON.stringify(sorter),
     JSON.stringify(formParams),
     searchId,
+    props.livePrizePoolId,
   ]);
 
   //分页请求
   function fetchData() {
     const { current, pageSize } = pagination;
     setLoading(true);
-    getPrizePoolPage({
+    getLivePrizePoolItemPage({
       page_data: {
         page: current,
         page_size: pageSize,
@@ -190,12 +127,6 @@ function SearchTable() {
     if (params.status != undefined && 'string' == typeof params.status) {
       params.status = params.status == 'true';
     }
-    if (
-      params.share_pool != undefined &&
-      'string' == typeof params.share_pool
-    ) {
-      params.share_pool = params.share_pool == 'true';
-    }
     setFormParams(params);
     setSearchId(v4());
   }
@@ -203,24 +134,7 @@ function SearchTable() {
   return (
     <Card>
       <Title heading={6}>{t['menu.list.searchTable']}</Title>
-      <SearchForm onSearch={handleSearch} />
-      <PermissionWrapper
-        requiredPermissions={[
-          { resource: 'prize_pool_manager', actions: ['api_prize_pool_add'] },
-        ]}
-      >
-        <div className={styles['button-group']}>
-          <Space>
-            <Button
-              type="primary"
-              icon={<IconPlus />}
-              onClick={() => tableCallback(null, 'add')}
-            >
-              {t['searchTable.operations.add']}
-            </Button>
-          </Space>
-        </div>
-      </PermissionWrapper>
+      <SearchForm livePrizePoolId={props.livePrizePoolId} onSearch={handleSearch} />
       <Table
         rowKey="id"
         loading={loading}
@@ -228,11 +142,6 @@ function SearchTable() {
         pagination={pagination}
         columns={columns}
         data={data}
-      />
-      <AddPage
-        visible={addVisible}
-        setVisible={setAddVisible}
-        callback={fetchData}
       />
       <InfoPage
         id={viewInfoId}
@@ -245,18 +154,8 @@ function SearchTable() {
         setVisible={setUpdateVisibled}
         callback={fetchData}
       />
-      <Modal
-        title={t['searchTable.columns.operations.item_manager']}
-        style={{ width: '80%', height: '80%' }}
-        visible={itemManagerVisible}
-        onCancel={() => setItemManagerVisibled(false)}
-        footer={null}
-        maskClosable={false}
-      >
-        <PrizePoolItemPage prizePoolId={prizePollId} />
-      </Modal>
     </Card>
   );
 }
 
-export default SearchTable;
+export default PrizePoolItemPage;

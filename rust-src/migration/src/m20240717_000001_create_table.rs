@@ -71,10 +71,12 @@ impl MigrationTrait for Migration {
                             .primary_key(),
                     )
                     .col(ColumnDef::new(LivePrizePool::PoolId).big_integer().comment("奖池ID"))
+                    .col(ColumnDef::new(LivePrizePool::SharePool).boolean().default(1).comment("是否共享奖池"))
                     .col(ColumnDef::new(LivePrizePool::PoolName).string().char_len(32).comment("奖池名称"))
                     .col(ColumnDef::new(LivePrizePool::Status).boolean().default(1).comment("状态"))
                     .col(ColumnDef::new(LivePrizePool::CreateTime).date_time().comment("创建时间"))
                     .col(ColumnDef::new(LivePrizePool::UpdateTime).date_time().comment("更新时间"))
+                    .col(ColumnDef::new(LivePrizePool::PoolDesc).string().char_len(100).comment("描述"))
                     .to_owned(),
             )
             .await?;
@@ -92,11 +94,17 @@ impl MigrationTrait for Migration {
                             .primary_key(),
                     )
                     .col(ColumnDef::new(LivePrizePoolItem::LiveId).big_integer().comment("活动奖池ID"))
-                    .col(ColumnDef::new(LivePrizePoolItem::PoolId).big_integer().comment("奖池ID"))
                     .col(ColumnDef::new(LivePrizePoolItem::PrizeId).big_integer().comment("奖品ID"))
-                    .col(ColumnDef::new(LivePrizePoolItem::RemainingQuantity).big_integer().default(0).comment("剩余数量"))
+                    .col(ColumnDef::new(LivePrizePoolItem::PrizeName).string().char_len(32).comment("奖品名称"))
+                    .col(ColumnDef::new(LivePrizePoolItem::Icon).text().comment("图标"))
+                    .col(ColumnDef::new(LivePrizePoolItem::Level).tiny_integer().default(0).comment("奖品等级"))
+                    .col(ColumnDef::new(LivePrizePoolItem::LevelName).string().default(0).comment("等级名称"))
+                    .col(ColumnDef::new(LivePrizePoolItem::Probability).integer().comment("中奖概率"))
+                    .col(ColumnDef::new(LivePrizePoolItem::Status).boolean().default(1).comment("状态"))
+                    .col(ColumnDef::new(LivePrizePoolItem::RemainingQuantity).integer().default(0).comment("剩余数量"))
                     .col(ColumnDef::new(LivePrizePoolItem::CreateTime).date_time().comment("创建时间"))
                     .col(ColumnDef::new(LivePrizePoolItem::UpdateTime).date_time().comment("更新时间"))
+                    .col(ColumnDef::new(LivePrizePoolItem::PrizeDesc).string().char_len(100).comment("描述"))
                     .to_owned(),
             )
             .await?;
@@ -168,20 +176,28 @@ enum LivePrizePool {
     Id,
     PoolId,
     PoolName,
+    SharePool,
     Status,
     CreateTime,
     UpdateTime,
+    PoolDesc,
 }
 #[derive(DeriveIden)]
 enum LivePrizePoolItem {
     Table,
     Id,
     LiveId,
-    PoolId,
     PrizeId,
+    PrizeName,
+    Level,
+    LevelName,
+    Icon,
+    Probability,
+    Status,
     RemainingQuantity,
     CreateTime,
     UpdateTime,
+    PrizeDesc,
 }
 
 #[derive(DeriveIden)]

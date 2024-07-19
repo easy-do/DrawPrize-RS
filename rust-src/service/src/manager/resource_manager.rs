@@ -1,4 +1,6 @@
-use sea_orm::{ActiveModelTrait, ColumnTrait, DatabaseConnection, DbConn, EntityTrait, NotSet, PaginatorTrait, QueryFilter};
+use std::str::FromStr;
+
+use sea_orm::{ActiveModelTrait, ColumnTrait, DatabaseConnection, DbConn, EntityTrait, NotSet, PaginatorTrait, QueryFilter, QueryOrder};
 use sea_orm::ActiveValue::Set;
 
 use common::error::MyError;
@@ -171,6 +173,15 @@ pub async fn page(db: &DbConn, resource_page: ResourcePage) -> Result<PageResult
     let resource_action = resource_page.resource_action;
     if resource_action.is_some() {
         find = find.filter(resource::Column::ResourceAction.eq(resource_action.unwrap()));
+    }
+
+    let sorter = page_data.sorter;
+    if sorter.is_some() {
+        let sorter = sorter.unwrap();
+        let field = resource::Column::from_str(sorter.field.as_str()).or_else(|e| {
+            Err(MyError::DBError(format!("获取排序字段失败：{}",e.to_string())))
+        })?;
+        find = find.order_by(field,sorter.order());
     }
 
     let paginator = find

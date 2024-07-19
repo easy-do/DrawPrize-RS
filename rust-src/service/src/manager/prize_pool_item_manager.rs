@@ -1,5 +1,7 @@
+use std::str::FromStr;
+
 use chrono::Local;
-use sea_orm::{ActiveModelTrait, ColumnTrait, DbConn, EntityTrait, NotSet, PaginatorTrait, QueryFilter};
+use sea_orm::{ActiveModelTrait, ColumnTrait, DbConn, EntityTrait, NotSet, PaginatorTrait, QueryFilter, QueryOrder};
 use sea_orm::ActiveValue::Set;
 
 use common::error::MyError;
@@ -64,12 +66,6 @@ pub async fn update_prize_pool_data(db: &DbConn, form: prize_pool_item::Model) -
     if form.status.is_some() {
         entity.status = Set(form.status);
     }
-    if form.create_time.is_some() {
-        entity.create_time = Set(form.create_time);
-    }
-    if form.update_time.is_some() {
-        entity.update_time = Set(form.update_time);
-    }
     if form.prize_desc.is_some() {
         entity.prize_desc = Set(form.prize_desc);
     }
@@ -78,13 +74,13 @@ pub async fn update_prize_pool_data(db: &DbConn, form: prize_pool_item::Model) -
     Ok(result.id)
 }
 
-pub async fn delete_prize_pool_item_data(db: &DbConn, user_id: i64) -> Result<bool, MyError> {
-    let res = PrizePoolItem::delete_by_id(user_id).exec(db).await?;
+pub async fn delete_prize_pool_item_data(db: &DbConn, id: i64) -> Result<bool, MyError> {
+    let res = PrizePoolItem::delete_by_id(id).exec(db).await?;
     Ok(res.rows_affected == 1)
 }
 
-pub async fn get_prize_pool_item_data(db: &DbConn, user_id: i64) -> Result<Option<prize_pool_item::Model>, MyError> {
-    let res = PrizePoolItem::find_by_id(user_id).one(db).await?;
+pub async fn get_prize_pool_item_data(db: &DbConn, id: i64) -> Result<Option<prize_pool_item::Model>, MyError> {
+    let res = PrizePoolItem::find_by_id(id).one(db).await?;
     Ok(res)
 }
 
@@ -124,6 +120,15 @@ pub async fn page(db: &DbConn, prize_pool_item_page: PrizePoolItemPage) -> Resul
         find = find.filter(prize_pool_item::Column::Status.eq(status.unwrap()));
     }
 
+    let sorter = page_data.sorter;
+    if sorter.is_some() {
+        let sorter = sorter.unwrap();
+        let field = prize_pool_item::Column::from_str(sorter.field.as_str()).or_else(|e| {
+            Err(MyError::DBError(format!("获取排序字段失败：{}",e.to_string())))
+        })?;
+        find = find.order_by(field,sorter.order());
+    }
+
     let paginator = find
         .paginate(db, page_data.page_size);
 
@@ -139,4 +144,13 @@ pub async fn page(db: &DbConn, prize_pool_item_page: PrizePoolItemPage) -> Resul
         record,
     })
 }
+
+
+pub async fn get_prize_pool_item_by_pool_id(db: &DbConn, pool_id: i64) -> Result<Vec<prize_pool_item::Model>, MyError> {
+        let res = PrizePoolItem::find()
+            .filter(prize_pool_item::Column::PoolId.eq(pool_id))
+            .all(db).await?;
+        Ok(res)
+}
+
 

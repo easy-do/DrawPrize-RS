@@ -47,3 +47,10 @@ async fn delete(app_state: web::Data<AppState>,
     let res = prize_pool_service::delete(&app_state.db, params.into_inner()).await?;
     Ok(HttpResponse::Ok().json(JsonResult::ok(res)))
 }
+
+#[get("/api/prize_pool/create_live_pool/{id}")]
+async fn create_live_pool(app_state: web::Data<AppState>,
+                params: web::Path<i64>, ) -> Result<HttpResponse, MyError> {
+    let res = prize_pool_service::create_live_pool(&app_state.db, params.into_inner()).await?;
+    Ok(HttpResponse::Ok().json(JsonResult::ok(res)))
+}
