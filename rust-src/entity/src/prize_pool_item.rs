@@ -16,6 +16,7 @@ pub struct Model {
     pub probability: Option<String>,
     pub quantity: Option<i32>,
     pub status: Option<bool>,
+    pub guarantees: Option<bool>,
     pub create_time: Option<DateTime>,
     pub update_time: Option<DateTime>,
     pub prize_desc: Option<String>,

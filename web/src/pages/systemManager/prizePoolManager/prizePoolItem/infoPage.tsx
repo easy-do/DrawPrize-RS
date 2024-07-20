@@ -93,6 +93,14 @@ function InfoPage(props: { id: number; visible; setVisible }) {
                 : '',
             },
             {
+              label: t['searchTable.columns.guarantees'],
+              value: infoData
+                ? infoData.guarantees
+                  ? t['searchTable.columns.yes']
+                  : t['searchTable.columns.no']
+                : '',
+            },
+            {
               label: t['searchTable.columns.create_time'],
               value:
                 infoData && infoData.create_time

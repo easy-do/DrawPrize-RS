@@ -34,6 +34,7 @@ pub async fn create_prize_pool_item_data(db: &DbConn, form: CreatePrizePoolItem)
         probability: Set(Some(probability)),
         quantity: Set(Some(quantity)),
         status: Set(form.status),
+        guarantees: Set(form.guarantees),
         create_time: Set(Some(Local::now().naive_local())),
         update_time: NotSet,
         prize_desc: Set(form.prize_desc),
@@ -65,6 +66,9 @@ pub async fn update_prize_pool_data(db: &DbConn, form: prize_pool_item::Model) -
     }
     if form.status.is_some() {
         entity.status = Set(form.status);
+    }
+    if form.guarantees.is_some() {
+        entity.guarantees = Set(form.guarantees);
     }
     if form.prize_desc.is_some() {
         entity.prize_desc = Set(form.prize_desc);
@@ -118,6 +122,10 @@ pub async fn page(db: &DbConn, prize_pool_item_page: PrizePoolItemPage) -> Resul
     let status = prize_pool_item_page.status;
     if status.is_some() {
         find = find.filter(prize_pool_item::Column::Status.eq(status.unwrap()));
+    }
+    let guarantees = prize_pool_item_page.guarantees;
+    if guarantees.is_some() {
+        find = find.filter(prize_pool_item::Column::Guarantees.eq(guarantees.unwrap()));
     }
 
     let sorter = page_data.sorter;

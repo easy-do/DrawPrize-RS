@@ -12,6 +12,7 @@ pub struct CreatePrizePoolItem{
     pub probability: Option<String>,
     pub quantity: Option<i32>,
     pub status: Option<bool>,
+    pub guarantees: Option<bool>,
     pub prize_desc: Option<String>,
 }
 
@@ -24,6 +25,7 @@ pub struct PrizePoolItemPage {
     pub probability: Option<String>,
     pub quantity: Option<i32>,
     pub status: Option<bool>,
+    pub guarantees: Option<bool>,
     pub prize_desc: Option<String>,
 }
 
@@ -72,5 +74,6 @@ pub struct LivePrizePoolItemPage {
     pub probability: Option<String>,
     pub remaining_quantity: Option<i32>,
     pub status: Option<bool>,
+    pub guarantees: Option<bool>,
     pub prize_desc: Option<String>,
 }

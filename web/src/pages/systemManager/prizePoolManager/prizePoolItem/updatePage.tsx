@@ -30,6 +30,7 @@ function UpdatePage(props: { id: number; visible; setVisible; callback }) {
           const { success, data } = res.data;
           if (success) {
             data.status = data.status + '';
+            data.guarantees = data.guarantees + '';
             data.share_pool = data.share_pool + '';
             formRef.current.setFieldsValue(data);
           }
@@ -52,6 +53,7 @@ function UpdatePage(props: { id: number; visible; setVisible; callback }) {
     formRef.current.validate().then((values) => {
       setLoading(true);
       values.status = values.status == 'true';
+      values.guarantees = values.guarantees == 'true';
       values.quantity = Number(values.quantity);
       updatePrizePoolItem(values)
         .then((res) => {
@@ -149,6 +151,26 @@ function UpdatePage(props: { id: number; visible; setVisible; callback }) {
           field={'prize_desc'}
         >
           <Input placeholder={t['searchForm.placeholder']} allowClear />
+        </FormItem>
+        <FormItem
+          required
+          label={t['searchTable.columns.guarantees']}
+          field={'guarantees'}
+        >
+          <Select
+            placeholder={t['searchForm.placeholder']}
+            options={[
+              {
+                label: t['searchTable.columns.yes'],
+                value: 'true',
+              },
+              {
+                label: t['searchTable.columns.no'],
+                value: 'false',
+              },
+            ]}
+            allowClear
+          />
         </FormItem>
         <FormItem
           required

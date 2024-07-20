@@ -53,7 +53,7 @@ export default function Welcome() {
         setDrawHistoryData(data.map((item, index) => (
           dayjs(item.create_time).format('YYYY-MM-DD : ') + item.user_name+'  通过 '+item.action+' 抽获得 '+ item.prize_ids.split("|").map((item)=>{
            const a =  item.split(',');
-           return a[1] + "X1";
+           return a[1] + "x1";
            
           }).join(","))
         ));
@@ -92,7 +92,7 @@ export default function Welcome() {
     getTopDrawData();
     getLivePrizePoolSelectList().then((res) => {
       const { success, data } = res.data;
-      if (success) {
+      if (success && data.length > 0) {
         setPoolSelectData(
           data.map((item) => {
             return {

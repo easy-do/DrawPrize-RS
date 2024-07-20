@@ -51,6 +51,7 @@ impl MigrationTrait for Migration {
                     .col(ColumnDef::new(PrizePoolItem::Probability).string().comment("中奖概率"))
                     .col(ColumnDef::new(PrizePoolItem::Quantity).integer().default(0).comment("数量"))
                     .col(ColumnDef::new(PrizePoolItem::Status).boolean().default(1).comment("状态"))
+                    .col(ColumnDef::new(PrizePoolItem::Guarantees).boolean().default(1).comment("是否保底"))
                     .col(ColumnDef::new(PrizePoolItem::CreateTime).date_time().comment("创建时间"))
                     .col(ColumnDef::new(PrizePoolItem::UpdateTime).date_time().comment("更新时间"))
                     .col(ColumnDef::new(PrizePoolItem::PrizeDesc).string().char_len(100).comment("描述"))
@@ -101,6 +102,7 @@ impl MigrationTrait for Migration {
                     .col(ColumnDef::new(LivePrizePoolItem::LevelName).string().default(0).comment("等级名称"))
                     .col(ColumnDef::new(LivePrizePoolItem::Probability).string().comment("中奖概率"))
                     .col(ColumnDef::new(LivePrizePoolItem::Status).boolean().default(1).comment("状态"))
+                    .col(ColumnDef::new(LivePrizePoolItem::Guarantees).boolean().default(1).comment("是否保底"))
                     .col(ColumnDef::new(LivePrizePoolItem::RemainingQuantity).integer().default(0).comment("剩余数量"))
                     .col(ColumnDef::new(LivePrizePoolItem::CreateTime).date_time().comment("创建时间"))
                     .col(ColumnDef::new(LivePrizePoolItem::UpdateTime).date_time().comment("更新时间"))
@@ -165,6 +167,7 @@ enum PrizePoolItem {
     Quantity,
     Probability,
     Status,
+    Guarantees,
     CreateTime,
     UpdateTime,
     PrizeDesc,
@@ -194,6 +197,7 @@ enum LivePrizePoolItem {
     Icon,
     Probability,
     Status,
+    Guarantees,
     RemainingQuantity,
     CreateTime,
     UpdateTime,

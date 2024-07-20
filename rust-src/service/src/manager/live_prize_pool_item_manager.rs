@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use std::str::FromStr;
 
 use chrono::Local;
@@ -8,6 +9,7 @@ use sea_orm::QueryFilter;
 use common::error::MyError;
 use common::page::PageResult;
 use entity::{live_prize_pool_item, prize_pool_item};
+use entity::live_prize_pool_item::Model;
 use entity::prelude::LivePrizePoolItem;
 use model::prize::LivePrizePoolItemPage;
 
@@ -25,6 +27,7 @@ pub async fn create_live_item(db: &DbConn, live_id : i64, items: Vec<prize_pool_
             probability: Set(item.probability),
             remaining_quantity: Set(item.quantity),
             status: Set(item.status),
+            guarantees: Set(item.guarantees),
             create_time: Set(Some(Local::now().naive_local())),
             update_time: NotSet,
             prize_desc: Set(item.prize_desc),
@@ -65,6 +68,9 @@ pub async fn update_prize_pool_data(db: &DbConn, form: live_prize_pool_item::Mod
     }
     if form.status.is_some() {
         entity.status = Set(form.status);
+    }
+    if form.guarantees.is_some() {
+        entity.guarantees = Set(form.guarantees);
     }
     if form.prize_desc.is_some() {
         entity.prize_desc = Set(form.prize_desc);
@@ -115,6 +121,10 @@ pub async fn page(db: &DbConn, page: LivePrizePoolItemPage) -> Result<PageResult
     if status.is_some() {
         find = find.filter(live_prize_pool_item::Column::Status.eq(status.unwrap()));
     }
+    let guarantees = page.guarantees;
+    if guarantees.is_some() {
+        find = find.filter(live_prize_pool_item::Column::Guarantees.eq(guarantees.unwrap()));
+    }
 
     let sorter = page_data.sorter;
     if sorter.is_some() {
@@ -164,4 +174,20 @@ pub async fn get_prize_pool_item_list_by_live_id(db: &DbConn, live_id: i64) -> R
         .into_model::<live_prize_pool_item::PoolItemList>()
         .all(db).await?;
     Ok(res)
+}
+
+pub async fn update_remaining_quantity(db: &DbConn, map: HashMap<i64, Vec<Model>>)  -> Result<bool, MyError> {
+    for item in map{
+        let entity = LivePrizePoolItem::find_by_id(item.0).one(db).await?;
+        match entity {
+            None => {}
+            Some(entity) => {
+                let mut entity: live_prize_pool_item::ActiveModel = entity.into();
+                entity.remaining_quantity = Set(Some(entity.remaining_quantity.unwrap().unwrap() - (item.1.len() as i32)));
+                entity.update_time = Set(Some(Local::now().naive_local()));
+                entity.update(db).await?;
+            }
+        }
+    }
+    Ok(true)
 }

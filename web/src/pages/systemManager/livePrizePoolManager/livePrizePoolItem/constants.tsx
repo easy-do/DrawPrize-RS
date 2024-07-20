@@ -53,6 +53,12 @@ export function getColumns(
         value ? t['searchForm.enable'] : t['searchForm.disable'],
     },
     {
+      title: t['searchTable.columns.guarantees'],
+      dataIndex: 'guarantees',
+      render: (value) =>
+        value ? t['searchTable.columns.yes'] : t['searchTable.columns.no'],
+    },
+    {
       title: t['searchTable.columns.create_time'],
       dataIndex: 'create_time',
       sorter: true,
