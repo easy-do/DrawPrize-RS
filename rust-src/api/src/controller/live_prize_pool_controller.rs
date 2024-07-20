@@ -66,3 +66,9 @@ async fn draw_history(app_state: web::Data<AppState>) -> Result<HttpResponse, My
     let res = live_prize_pool_service::draw_history(&app_state.db).await?;
     Ok(HttpResponse::Ok().json(JsonResult::ok(res)))
 }
+
+#[get("/un-auth-api/live_prize_pool/pool_draw_count/{live_id}")]
+async fn pool_draw_count(app_state: web::Data<AppState>,params: web::Path<i64>) -> Result<HttpResponse, MyError> {
+    let res = live_prize_pool_service::pool_draw_count(&app_state.db,params.into_inner()).await?;
+    Ok(HttpResponse::Ok().json(JsonResult::ok(res)))
+}

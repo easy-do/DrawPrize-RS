@@ -10,4 +10,5 @@ export const drawLivePrizePool = (live_id,draw_num) => get("/api/live_prize_pool
 export const topDraw = () => get("/un-auth-api/live_prize_pool/top_draw");
 export const getPrizeItemList = (live_id) => get("un-auth-api/live_prize_pool/prize_item_list/"+live_id);
 export const getDrawHistory = () => get("/un-auth-api/live_prize_pool/draw_history");
+export const getPoolDrawCount = (live_id) => get("/un-auth-api/live_prize_pool/pool_draw_count/"+live_id);
 

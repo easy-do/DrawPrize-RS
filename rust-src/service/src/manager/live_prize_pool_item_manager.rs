@@ -191,3 +191,18 @@ pub async fn update_remaining_quantity(db: &DbConn, map: HashMap<i64, Vec<Model>
     }
     Ok(true)
 }
+
+pub async fn pool_item_remaining_quantity_count(db: &DbConn, live_id: i64)  -> Result<i32, MyError> {
+    let res = LivePrizePoolItem::find()
+        .column_as(live_prize_pool_item::Column::RemainingQuantity.sum(),"remaining_quantity")
+        .filter(live_prize_pool_item::Column::LiveId.eq(live_id))
+        .one(db).await?;
+    match res {
+        None => {
+            Ok(0)
+        }
+        Some(res) => {
+            Ok(res.remaining_quantity.unwrap())
+        }
+    }
+}

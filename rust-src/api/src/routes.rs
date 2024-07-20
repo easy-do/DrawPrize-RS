@@ -1,6 +1,6 @@
 use actix_web::web;
 
-use crate::controller::{auth_controller, live_prize_pool_controller, live_prize_pool_item_controller, prize_pool_controller, prize_pool_item_controller, resource_controller, role_controller, user_controller};
+use crate::controller::{auth_controller, live_prize_pool_controller, live_prize_pool_item_controller, prize_draw_history_controller, prize_pool_controller, prize_pool_item_controller, resource_controller, role_controller, user_controller};
 use crate::controller::health::health_check;
 
 // 生成路由地址
@@ -14,6 +14,12 @@ pub fn general_routes(cfg: &mut web::ServiceConfig) {
     prize_pool_item_routes(cfg);
     live_prize_pool_routes(cfg);
     live_prize_pool_item_routes(cfg);
+    prize_draw_history_routes(cfg);
+}
+
+
+pub fn prize_draw_history_routes(cfg: &mut web::ServiceConfig) {
+    cfg.service(prize_draw_history_controller::user_page);
 }
 
 pub fn live_prize_pool_item_routes(cfg: &mut web::ServiceConfig) {
@@ -32,7 +38,8 @@ pub fn live_prize_pool_routes(cfg: &mut web::ServiceConfig) {
         .service(live_prize_pool_controller::draw)
         .service(live_prize_pool_controller::top_draw)
         .service(live_prize_pool_controller::prize_item_list)
-        .service(live_prize_pool_controller::draw_history);
+        .service(live_prize_pool_controller::draw_history)
+        .service(live_prize_pool_controller::pool_draw_count);
 }
 
 pub fn prize_pool_item_routes(cfg: &mut web::ServiceConfig) {

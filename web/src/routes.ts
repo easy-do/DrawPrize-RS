@@ -59,20 +59,30 @@ export const routes: IRoute[] = [
     ],
   },
   {
-    name: 'menu.visualization',
-    key: 'visualization',
+    name: 'menu.user',
+    key: 'user',
     children: [
       {
-        name: 'menu.visualization.dataAnalysis',
-        key: 'visualization/data-analysis',
-      },
-      {
-        name: 'menu.visualization.multiDimensionDataAnalysis',
-        key: 'visualization/multi-dimension-data-analysis',
-        oneOfPerm: true,
+        name: 'menu.drawhistory',
+        key: 'user/drawHistory',
       },
     ],
   },
+  // {
+  //   name: 'menu.visualization',
+  //   key: 'visualization',
+  //   children: [
+  //     {
+  //       name: 'menu.visualization.dataAnalysis',
+  //       key: 'visualization/data-analysis',
+  //     },
+  //     {
+  //       name: 'menu.visualization.multiDimensionDataAnalysis',
+  //       key: 'visualization/multi-dimension-data-analysis',
+  //       oneOfPerm: true,
+  //     },
+  //   ],
+  // },
 ];
 
 export const getName = (path: string, routes) => {

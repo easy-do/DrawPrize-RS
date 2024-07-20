@@ -17,6 +17,7 @@ import {
   drawLivePrizePool,
   getDrawHistory,
   getLivePrizePoolSelectList,
+  getPoolDrawCount,
   getPrizeItemList,
   topDraw,
 } from '@/api/livePrizePool';
@@ -43,6 +44,8 @@ export default function Welcome() {
   const [currentPoolId, setCurrentPoolId] = useState(1);
   //当前奖池物品
   const [currentPoolItemData, setCurrentPoolItemData] = useState([]);
+  //当前奖池抽取和剩余奖品统计
+  const [currentPoolDrawCountData, setCurrentPoolDrawCountData] = useState({action:0,remaining_quantity:0});
   //最新中奖信息
   const [drawHistoryData, setDrawHistoryData] = useState([]);
 
@@ -51,7 +54,7 @@ export default function Welcome() {
       const { success, data } = res.data;
       if (success) {
         setDrawHistoryData(data.map((item, index) => (
-          dayjs(item.create_time).format('YYYY-MM-DD : ') + item.user_name+'  通过 '+item.action+' 抽获得 '+ item.prize_ids.split("|").map((item)=>{
+          dayjs(item.create_time).format('YYYY-MM-DD hh:mm:ss : ') + item.user_name+'  通过 '+item.action+' 抽获得 '+ item.prize_ids.split("|").map((item)=>{
            const a =  item.split(',');
            return a[1] + "x1";
            
@@ -67,6 +70,7 @@ export default function Welcome() {
     setCurrentPoolId(value);
     getCurrentPoolItemData(value);
     getTopDrawData();
+    getCurrentPoolDrawCountData(value);
   }
 
   function getCurrentPoolItemData(currentPoolId) {
@@ -74,6 +78,14 @@ export default function Welcome() {
       const { success, data } = res.data;
       if (success) {
         setCurrentPoolItemData(data);
+      }
+    });
+  }
+  function getCurrentPoolDrawCountData(currentPoolId) {
+    getPoolDrawCount(currentPoolId).then((res) => {
+      const { success, data } = res.data;
+      if (success) {
+        setCurrentPoolDrawCountData(data);
       }
     });
   }
@@ -101,8 +113,11 @@ export default function Welcome() {
             };
           })
         );
-        setCurrentPoolId(data ? data[0].id : 1);
-        getCurrentPoolItemData(data ? data[0].id : 1);
+        if(data){
+          setCurrentPoolId(data[0].id);
+          getCurrentPoolItemData(data[0].id);
+          getCurrentPoolDrawCountData(data[0].id);
+        }
       }
     });
   }, []);
@@ -125,10 +140,10 @@ export default function Welcome() {
       <Row gutter={20} style={{ marginBottom: 20 }}>
         <Col span={20}>
           <Card
-            title="抽奖"
+            title={ <div>当前奖池累积抽取<span style={{color:'blue'}}>{currentPoolDrawCountData.action}</span> 次 剩余奖品 <span style={{color:'blue'}}>{currentPoolDrawCountData.remaining_quantity}</span></div>}
             extra={
               <>
-                <Select placeholder="选择奖池" options={poolSelectData} onChange={poolSelectOnChange} />
+                <Select placeholder="切换奖池" options={poolSelectData} onChange={poolSelectOnChange} />
               </>
             }
             bordered={false}
@@ -146,6 +161,7 @@ export default function Welcome() {
                       getTopDrawData();
                       getCurrentPoolItemData(currentPoolId);
                       getDrawHistoryData();
+                      getCurrentPoolDrawCountData(currentPoolId);
                     } else {
                       Notification.error({ content: message, duration: 1000 });
                     }
@@ -167,6 +183,7 @@ export default function Welcome() {
                       getTopDrawData();
                       getCurrentPoolItemData(currentPoolId);
                       getDrawHistoryData();
+                      getCurrentPoolDrawCountData(currentPoolId);
                     } else {
                       Notification.error({ content: message, duration: 1000 });
                     }
