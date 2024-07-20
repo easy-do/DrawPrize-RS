@@ -127,6 +127,9 @@ function PrizePoolItemPage(props: { livePrizePoolId: number }) {
     if (params.status != undefined && 'string' == typeof params.status) {
       params.status = params.status == 'true';
     }
+    if (params.guarantees != undefined && 'string' == typeof params.guarantees) {
+      params.guarantees = params.guarantees == 'true';
+    }
     setFormParams(params);
     setSearchId(v4());
   }

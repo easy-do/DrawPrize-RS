@@ -31,6 +31,7 @@ function AddPage(props: {
     formRef.current.validate().then((values) => {
       setLoading(true);
       values.status = values.status == 'true';
+      values.guarantees = values.guarantees == 'true';
       values.level = Number(values.level);
       values.quantity = Number(values.quantity);
       addPrizePoolItem(values)
@@ -131,6 +132,27 @@ function AddPage(props: {
           field={'prize_desc'}
         >
           <Input placeholder={t['searchForm.placeholder']} allowClear />
+        </FormItem>
+        <FormItem
+          required
+          initialValue={'false'}
+          label={t['searchTable.columns.guarantees']}
+          field={'guarantees'}
+        >
+          <Select
+            placeholder={t['searchForm.placeholder']}
+            options={[
+              {
+                label: t['searchForm.enable'],
+                value: 'true',
+              },
+              {
+                label: t['searchForm.disable'],
+                value: 'false',
+              },
+            ]}
+            allowClear
+          />
         </FormItem>
         <FormItem
           required

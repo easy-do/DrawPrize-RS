@@ -117,6 +117,24 @@ function SearchForm(props: {
               />
             </Form.Item>
           </Col>
+          <Col span={colSpan}>
+            <Form.Item label={t['searchTable.columns.guarantees']} field={'guarantees'}>
+              <Select
+                placeholder={t['searchForm.placeholder']}
+                options={[
+                  {
+                    label: t['searchTable.columns.yes'],
+                    value: 'true',
+                  },
+                  {
+                    label: t['searchTable.columns.no'],
+                    value: 'false',
+                  },
+                ]}
+                allowClear
+              />
+            </Form.Item>
+          </Col>
         </Row>
       </Form>
       <div className={styles['right-button']}>
