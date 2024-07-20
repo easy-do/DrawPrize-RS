@@ -4,12 +4,12 @@ use std::sync::{Arc, Mutex};
 use actix_web::HttpRequest;
 use rand::prelude::SliceRandom;
 use rand::Rng;
-use sea_orm::{DatabaseConnection, DbConn};
+use sea_orm::DbConn;
 
 use common::error::MyError;
 use common::page::PageResult;
 use entity::{live_prize_history, live_prize_pool, live_prize_pool_item};
-use model::prize::LivePrizePoolPage;
+use model::prize::{LivePrizePoolPage, PoolDrawCount};
 use security::state::AuthState;
 
 use crate::manager::{live_prize_history_manager, live_prize_pool_item_manager, live_prize_pool_manager};
@@ -173,6 +173,15 @@ pub async fn prize_item_list(db: &DbConn, live_id: i64) -> Result<Vec<live_prize
     Ok(live_prize_pool_item_manager::get_prize_pool_item_list_by_live_id(db, live_id).await?)
 }
 
-pub async fn draw_history(db: &DatabaseConnection) -> Result<Vec<live_prize_history::DrawHistory>, MyError> {
+pub async fn draw_history(db: &DbConn) -> Result<Vec<live_prize_history::DrawHistory>, MyError> {
     Ok(live_prize_history_manager::draw_history(db).await?)
+}
+
+pub async fn pool_draw_count(db: &DbConn, live_id: i64) -> Result<PoolDrawCount, MyError>  {
+    let draw_count = live_prize_history_manager::pool_draw_cation_count(db, live_id).await?;
+    let remaining_quantity_count = live_prize_pool_item_manager::pool_item_remaining_quantity_count(db, live_id).await?;
+    Ok(PoolDrawCount{
+        action: Option::from(draw_count),
+        remaining_quantity: Option::from(remaining_quantity_count),
+    })
 }

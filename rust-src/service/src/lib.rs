@@ -7,4 +7,5 @@ pub mod prize_pool_service;
 pub mod prize_pool_item_service;
 pub mod live_prize_pool_service;
 pub mod live_prize_pool_item_service;
+pub mod draw_history_service;
 mod manager;

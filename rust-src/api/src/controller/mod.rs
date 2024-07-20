@@ -8,3 +8,4 @@ pub mod prize_pool_controller;
 pub mod prize_pool_item_controller;
 pub mod live_prize_pool_controller;
 pub mod live_prize_pool_item_controller;
+pub mod prize_draw_history_controller;

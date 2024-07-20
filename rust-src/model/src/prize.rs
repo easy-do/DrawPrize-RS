@@ -77,3 +77,17 @@ pub struct LivePrizePoolItemPage {
     pub guarantees: Option<bool>,
     pub prize_desc: Option<String>,
 }
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct PoolDrawCount {
+    pub action: Option<i64>,
+    pub remaining_quantity: Option<i32>,
+}
+
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct UserDrawHistoryPage {
+    pub page_data: PageData,
+    pub live_id: Option<i64>,
+    pub create_time: Option<Vec<String>>,
+}
