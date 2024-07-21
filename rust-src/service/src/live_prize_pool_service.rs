@@ -147,6 +147,8 @@ pub async fn draw(db: &DbConn, live_id: i64, draw_num: i64, token: &str, req: Ht
                             live_id: None,
                             prize_id: item.prize_id,
                             prize_name: item.prize_name.clone(),
+                            level: item.level,
+                            level_name: item.level_name.clone(),
                             icon: item.icon.clone(),
                             remaining_quantity: None,
                         });

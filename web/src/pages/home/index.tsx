@@ -54,8 +54,21 @@ export default function Welcome() {
       const { success, data } = res.data;
       if (success) {
         setDrawHistoryData(data.map((item, index) => (
-          dayjs(item.create_time).format('YYYY-MM-DD hh:mm:ss : ') + item.user_name+'  通过 '+item.action+' 抽获得 '+ JSON.parse(item.prize_items).map((item)=>item.prize_name).join("|"))
-        ));
+          <div key={index}>
+            {dayjs(item.create_time).format('YYYY-MM-DD hh:mm:ss : ') }
+            用户 <span style={{color:'blue'}}>{item.user_name}</span>
+            {'  通过 '}
+              <span style={{color:'red'}}>{item.action}</span> 抽 获得:&nbsp;
+            {
+              JSON.parse(item.prize_items).map((item, index) => (
+                <>
+                  <span key={index} style={{color:'red'}}>[{item.level_name}]</span>
+                  <span key={index} style={{color:'blue'}}>{item.prize_name}</span>&nbsp;
+                </>
+              ))
+            }
+          </div>
+        )));
       }
     });
   }

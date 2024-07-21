@@ -36,6 +36,8 @@ pub struct PoolItemList {
     pub live_id: Option<i64>,
     pub prize_id: Option<i64>,
     pub prize_name: Option<String>,
+    pub level: Option<i32>,
+    pub level_name: Option<String>,
     pub icon: Option<String>,
     pub remaining_quantity: Option<i32>,
 }

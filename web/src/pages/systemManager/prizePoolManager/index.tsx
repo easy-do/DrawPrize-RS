@@ -247,7 +247,7 @@ function SearchTable() {
       />
       <Modal
         title={t['searchTable.columns.operations.item_manager']}
-        style={{ width: '80%', height: '90%' }}
+        style={{ minWidth: '80%', minHeight: '90%' }}
         visible={itemManagerVisible}
         onCancel={() => setItemManagerVisibled(false)}
         footer={null}

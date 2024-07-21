@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Typography } from '@arco-design/web-react';
+import { Typography } from '@arco-design/web-react';
 import dayjs from 'dayjs';
 
 const { Text } = Typography;
@@ -27,7 +27,7 @@ export function getColumns(
     //   ellipsis: true,
     // },
     {
-      width: '100px',
+      width: '150px',
       title: t['searchTable.columns.action'],
       dataIndex: 'action',
       ellipsis: true,
@@ -48,7 +48,12 @@ export function getColumns(
       title: t['searchTable.columns.prize_ids'],
       dataIndex: 'prize_items',
       ellipsis: true,
-      render: (value) => value? JSON.parse(value).map((item)=>item.prize_name).join(",") : ''
+      render: (value) => value? JSON.parse(value).map((item, index) => (
+        <>
+          <span key={index} style={{color:'red'}}>[{item.level_name}]</span>
+          <span key={index} style={{color:'blue'}}>{item.prize_name}</span>&nbsp;
+        </>
+      )) : ''
     },
     // {
     //   title: t['searchTable.columns.operations'],

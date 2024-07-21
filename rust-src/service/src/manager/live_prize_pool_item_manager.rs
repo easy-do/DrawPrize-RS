@@ -12,6 +12,8 @@ use entity::{live_prize_pool_item, prize_pool_item};
 use entity::live_prize_pool_item::Model;
 use entity::prelude::LivePrizePoolItem;
 use model::prize::LivePrizePoolItemPage;
+use crate::manager::prize_pool_item_manager::check_probability;
+
 
 pub async fn create_live_item(db: &DbConn, live_id : i64, items: Vec<prize_pool_item::Model>) -> Result<i64, MyError> {
     let mut entities = Vec::new();
@@ -61,6 +63,7 @@ pub async fn update_prize_pool_data(db: &DbConn, form: live_prize_pool_item::Mod
         entity.level_name = Set(form.level_name);
     }
     if form.probability.is_some() {
+        check_probability(&form.probability.clone().unwrap())?;
         entity.probability = Set(form.probability);
     }
     if form.remaining_quantity.is_some() {
@@ -168,6 +171,8 @@ pub async fn get_prize_pool_item_list_by_live_id(db: &DbConn, live_id: i64) -> R
         .column(live_prize_pool_item::Column::PrizeName)
         .column(live_prize_pool_item::Column::Icon)
         .column(live_prize_pool_item::Column::RemainingQuantity)
+        .column(live_prize_pool_item::Column::Level)
+        .column(live_prize_pool_item::Column::LevelName)
         .filter(live_prize_pool_item::Column::LiveId.eq(live_id))
         .filter(live_prize_pool_item::Column::Status.eq(true))
         .order_by(live_prize_pool_item::Column::Level,Order::Asc)

@@ -17,6 +17,17 @@ pub async fn get_prize_pool_item_list(db: &DbConn) -> Result<Vec<prize_pool_item
     Ok(a)
 }
 
+pub fn check_probability(probability: &String) -> Result<bool, MyError> {
+    let number: f32 = probability.parse().or_else(|_e| {
+        Err(MyError::ServerError("概率应是在0到1之间的整数或小数".to_string()))
+    })?;
+    if number > 1.0 || number <= 0.0 {
+        Err(MyError::ServerError("概率应是在0到1之间的整数或小数".to_string()))
+    } else {
+        Ok(true)
+    }
+}
+
 pub async fn create_prize_pool_item_data(db: &DbConn, form: CreatePrizePoolItem) -> Result<i64, MyError> {
     let pool_id = form.pool_id.ok_or(MyError::ServerError("奖池id不能为空".to_string()))?;
     let prize_name = form.prize_name.ok_or(MyError::ServerError("名称不能为空".to_string()))?;
@@ -24,6 +35,7 @@ pub async fn create_prize_pool_item_data(db: &DbConn, form: CreatePrizePoolItem)
     let level_name = form.level_name.ok_or(MyError::ServerError("等级名称不能为空".to_string()))?;
     let probability = form.probability.ok_or(MyError::ServerError("概率不能为空".to_string()))?;
     let quantity = form.quantity.ok_or(MyError::ServerError("数量不能为空".to_string()))?;
+    check_probability(&probability)?;
     let model = prize_pool_item::ActiveModel {
         id: NotSet,
         pool_id: Set(Some(pool_id)),
@@ -59,6 +71,7 @@ pub async fn update_prize_pool_data(db: &DbConn, form: prize_pool_item::Model) -
         entity.level_name = Set(form.level_name);
     }
     if form.probability.is_some() {
+        check_probability(&form.probability.clone().unwrap())?;
         entity.probability = Set(form.probability);
     }
     if form.quantity.is_some() {
@@ -96,11 +109,11 @@ pub async fn page(db: &DbConn, prize_pool_item_page: PrizePoolItemPage) -> Resul
 
     let prize_name = prize_pool_item_page.prize_name;
     if prize_name.is_some() {
-        find = find.filter(prize_pool_item::Column::PrizeName.like(format!("%{}%",prize_name.unwrap())));
+        find = find.filter(prize_pool_item::Column::PrizeName.like(format!("%{}%", prize_name.unwrap())));
     }
     let prize_desc = prize_pool_item_page.prize_desc;
     if prize_desc.is_some() {
-        find = find.filter(prize_pool_item::Column::PrizeDesc.like(format!("%{}%",prize_desc.unwrap())));
+        find = find.filter(prize_pool_item::Column::PrizeDesc.like(format!("%{}%", prize_desc.unwrap())));
     }
 
     let level = prize_pool_item_page.level;
@@ -109,7 +122,7 @@ pub async fn page(db: &DbConn, prize_pool_item_page: PrizePoolItemPage) -> Resul
     }
     let level_name = prize_pool_item_page.level_name;
     if level_name.is_some() {
-        find = find.filter(prize_pool_item::Column::LevelName.like(format!("%{}%",level_name.unwrap())));
+        find = find.filter(prize_pool_item::Column::LevelName.like(format!("%{}%", level_name.unwrap())));
     }
     let probability = prize_pool_item_page.probability;
     if probability.is_some() {
@@ -132,9 +145,9 @@ pub async fn page(db: &DbConn, prize_pool_item_page: PrizePoolItemPage) -> Resul
     if sorter.is_some() {
         let sorter = sorter.unwrap();
         let field = prize_pool_item::Column::from_str(sorter.field.as_str()).or_else(|e| {
-            Err(MyError::DBError(format!("获取排序字段失败：{}",e.to_string())))
+            Err(MyError::DBError(format!("获取排序字段失败：{}", e.to_string())))
         })?;
-        find = find.order_by(field,sorter.order());
+        find = find.order_by(field, sorter.order());
     }
 
     let paginator = find
@@ -155,10 +168,10 @@ pub async fn page(db: &DbConn, prize_pool_item_page: PrizePoolItemPage) -> Resul
 
 
 pub async fn get_prize_pool_item_by_pool_id(db: &DbConn, pool_id: i64) -> Result<Vec<prize_pool_item::Model>, MyError> {
-        let res = PrizePoolItem::find()
-            .filter(prize_pool_item::Column::PoolId.eq(pool_id))
-            .all(db).await?;
-        Ok(res)
+    let res = PrizePoolItem::find()
+        .filter(prize_pool_item::Column::PoolId.eq(pool_id))
+        .all(db).await?;
+    Ok(res)
 }
 
 
