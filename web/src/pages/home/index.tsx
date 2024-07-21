@@ -54,11 +54,7 @@ export default function Welcome() {
       const { success, data } = res.data;
       if (success) {
         setDrawHistoryData(data.map((item, index) => (
-          dayjs(item.create_time).format('YYYY-MM-DD hh:mm:ss : ') + item.user_name+'  通过 '+item.action+' 抽获得 '+ item.prize_ids.split("|").map((item)=>{
-           const a =  item.split(',');
-           return a[1] + "x1";
-           
-          }).join(","))
+          dayjs(item.create_time).format('YYYY-MM-DD hh:mm:ss : ') + item.user_name+'  通过 '+item.action+' 抽获得 '+ JSON.parse(item.prize_items).map((item)=>item.prize_name).join("|"))
         ));
       }
     });

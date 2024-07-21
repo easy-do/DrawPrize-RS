@@ -14,6 +14,7 @@ pub struct Model {
     pub user_id: Option<i64>,
     pub action: Option<i64>,
     pub prize_ids: Option<String>,
+    pub prize_items: Option<String>,
     pub create_time: Option<DateTime>,
 }
 
@@ -36,5 +37,6 @@ pub struct DrawHistory {
     pub user_id: Option<i64>,
     pub user_name: Option<String>,
     pub prize_ids: Option<String>,
+    pub prize_items: Option<String>,
     pub create_time: Option<DateTime>,
 }

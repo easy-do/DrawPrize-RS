@@ -6,11 +6,11 @@ use sea_orm::ActiveValue::Set;
 
 use common::error::MyError;
 use common::page::PageResult;
-use entity::{live_prize_history, user};
+use entity::{live_prize_history, live_prize_pool_item, user};
 use entity::prelude::LivePrizeHistory;
 use model::prize::UserDrawHistoryPage;
 
-pub async fn create_live_prize_history_data(db: &DbConn, live_id:i64, pool_id:i64, user_id:i64, action :i64, prize_ids :String) -> Result<i64, MyError> {
+pub async fn create_live_prize_history_data(db: &DbConn, live_id:i64, pool_id:i64, user_id:i64, action :i64, items: Vec<live_prize_pool_item::PoolItemList>) -> Result<i64, MyError> {
     let model = live_prize_history::ActiveModel {
         id: NotSet,
         live_id: Set(Some(live_id)),
@@ -18,7 +18,8 @@ pub async fn create_live_prize_history_data(db: &DbConn, live_id:i64, pool_id:i6
         user_id: Set(Some(user_id)),
         action: Set(Some(action)),
         create_time: Set(Some(Local::now().naive_local())),
-        prize_ids: Set(Some(prize_ids)),
+        prize_ids: Set(Option::from(items.iter().map(|items| items.id.to_string()).collect::<Vec<String>>().join(","))),
+        prize_items: Set(Option::from(serde_json::to_string(&items).unwrap())),
     }.insert(db).await?;
     Ok(model.id)
 }
@@ -53,6 +54,7 @@ pub async fn draw_history(db: &DbConn) -> Result<Vec<live_prize_history::DrawHis
         .column(live_prize_history::Column::Action)
         .column(live_prize_history::Column::UserId)
         .column(live_prize_history::Column::PrizeIds)
+        .column(live_prize_history::Column::PrizeItems)
         .column(user::Column::UserName)
         .order_by(live_prize_history::Column::CreateTime,Order::Desc)
         .into_model::<live_prize_history::DrawHistory>()
@@ -64,13 +66,18 @@ pub async fn pool_draw_cation_count(db: &DbConn, live_id: i64) -> Result<i64, My
     let res = LivePrizeHistory::find()
         .column_as(live_prize_history::Column::Action.sum(),"action")
         .filter(live_prize_history::Column::LiveId.eq(live_id))
-        .one(db).await?;
-    match res {
-        None => {
-            Ok(0)
-        }
-        Some(res) => {
-            Ok(res.action.unwrap())
+        .group_by(live_prize_history::Column::LiveId)
+        .all(db).await?;
+    if res.is_empty() {
+        Ok(0)
+    }else {
+        match res.get(0) {
+            None => {
+                Ok(0)
+            }
+            Some(res) => {
+                Ok(res.action.unwrap())
+            }
         }
     }
 }

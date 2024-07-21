@@ -14,6 +14,7 @@ mod m20240717_000001_create_table;
 mod m20240717_000002_create_table;
 mod m20240718_000001_create_table;
 mod m20240719_000001_create_table;
+mod m20240721_000001_create_table;
 
 
 pub struct Migrator;
@@ -35,6 +36,7 @@ impl MigratorTrait for Migrator {
              Box::new(m20240717_000002_create_table::Migration),
              Box::new(m20240718_000001_create_table::Migration),
              Box::new(m20240719_000001_create_table::Migration),
+             Box::new(m20240721_000001_create_table::Migration),
         ]
     }
 }
