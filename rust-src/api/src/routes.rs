@@ -1,3 +1,4 @@
+use actix_files::Files;
 use actix_web::web;
 
 use crate::controller::{auth_controller, live_prize_pool_controller, live_prize_pool_item_controller, prize_draw_history_controller, prize_pool_controller, prize_pool_item_controller, resource_controller, role_controller, user_controller};
@@ -6,6 +7,7 @@ use crate::controller::health::health_check;
 // 生成路由地址
 pub fn general_routes(cfg: &mut web::ServiceConfig) {
     cfg.route("/health", web::get().to(health_check));
+    cfg.service(Files::new("/static", "static").show_files_listing());
     role_routes(cfg);
     user_routes(cfg);
     resource_routes(cfg);

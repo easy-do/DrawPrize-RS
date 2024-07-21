@@ -36,7 +36,8 @@ module.exports = withLess(
       return [
         {
           source: '/',
-          destination: '/home',
+          destination: '/static/home.html', //生产环境 需要配置成静态文件，否则会报404错误
+          // destination: '/home', //开发环境
           permanent: true,
         },
       ];
@@ -53,6 +54,8 @@ module.exports = withLess(
         },
       ];
     },
+    assetPrefix: "/static/",  //生产环境 需要配置成静态文件，否则会报404错误
+    basePath: "/static",  //生产环境 需要配置成静态文件，否则会报404错误
     pageExtensions: ['tsx'],
   })
 );
