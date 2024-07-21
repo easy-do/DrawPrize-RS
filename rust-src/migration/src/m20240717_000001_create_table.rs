@@ -125,9 +125,10 @@ impl MigrationTrait for Migration {
                     )
                     .col(ColumnDef::new(LivePrizeHistory::LiveId).big_integer().comment("活动奖池ID"))
                     .col(ColumnDef::new(LivePrizeHistory::PoolId).big_integer().comment("奖池ID"))
-                    .col(ColumnDef::new(LivePrizeHistory::UserId).big_integer().comment("奖品ID"))
+                    .col(ColumnDef::new(LivePrizeHistory::UserId).big_integer().comment("用户ID"))
                     .col(ColumnDef::new(LivePrizeHistory::Action).big_integer().comment("动作类型"))
                     .col(ColumnDef::new(LivePrizeHistory::PrizeIds).string().comment("奖品ID集合"))
+                    .col(ColumnDef::new(LivePrizeHistory::PrizeItems).string().comment("奖品信息"))
                     .col(ColumnDef::new(LivePrizeHistory::CreateTime).date_time().comment("创建时间"))
                     .to_owned(),
             )
@@ -213,5 +214,6 @@ enum LivePrizeHistory {
     LiveId,
     PoolId,
     PrizeIds,
+    PrizeItems,
     CreateTime
 }

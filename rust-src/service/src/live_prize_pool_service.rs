@@ -140,7 +140,6 @@ pub async fn draw(db: &DbConn, live_id: i64, draw_num: i64, token: &str, req: Ht
                     live_prize_pool_item_manager::update_remaining_quantity(db, item_map).await?;
 
                     //抽奖结果
-                    let mut draw_item_id = Vec::new();
                     let mut result = Vec::new();
                     for item in &draw_item {
                         result.push(live_prize_pool_item::PoolItemList {
@@ -151,12 +150,10 @@ pub async fn draw(db: &DbConn, live_id: i64, draw_num: i64, token: &str, req: Ht
                             icon: item.icon.clone(),
                             remaining_quantity: None,
                         });
-                        draw_item_id.push(format!("{},{}", item.id, item.prize_name.clone().unwrap().to_string()));
                     }
 
                     //保存抽奖记录
-                    live_prize_history_manager::create_live_prize_history_data(db, live_id, live_pool.pool_id.unwrap(), uid, draw_num,
-                                                                               draw_item_id.iter().map(|x| { x.to_string() }).collect::<Vec<String>>().join("|")).await?;
+                    live_prize_history_manager::create_live_prize_history_data(db, live_id, live_pool.pool_id.unwrap(), uid, draw_num,result.clone()).await?;
                     //返回抽奖结果
                     Ok(result)
                 }

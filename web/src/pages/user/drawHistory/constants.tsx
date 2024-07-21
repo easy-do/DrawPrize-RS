@@ -46,12 +46,9 @@ export function getColumns(
     },
     {
       title: t['searchTable.columns.prize_ids'],
-      dataIndex: 'prize_ids',
+      dataIndex: 'prize_items',
       ellipsis: true,
-      render: (value) => value? value.split("|").map((item)=>{
-        const a =  item.split(',');
-        return a[1] + "x1";
-       }).join(",") : ''
+      render: (value) => value? JSON.parse(value).map((item)=>item.prize_name).join(",") : ''
     },
     // {
     //   title: t['searchTable.columns.operations'],

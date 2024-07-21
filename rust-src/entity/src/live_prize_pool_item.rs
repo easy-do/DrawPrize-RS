@@ -30,7 +30,7 @@ pub enum Relation {}
 impl ActiveModelBehavior for ActiveModel {}
 
 
-#[derive(FromQueryResult,Serialize, Deserialize)]
+#[derive(Clone,FromQueryResult,Serialize, Deserialize)]
 pub struct PoolItemList {
     pub id: i64,
     pub live_id: Option<i64>,
