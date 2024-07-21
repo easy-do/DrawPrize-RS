@@ -22,10 +22,11 @@ arco design
 
 1.  clone
 2.  cd web | yarn run install | yarn run build | yarn run export 
-3.  cp out/* ../rust-src/static
+3.  cp out/* xxx/static
 4.  cd ../rust-src  | cargo build --release
 5.  cp target/release/DrawPrize-RS  xxx
-6. ./DrawPrize-RS
+6.  cd xxx 
+7.  ./DrawPrize-RS
 
 #### 使用说明 instructions
 
