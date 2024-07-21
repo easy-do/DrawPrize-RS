@@ -117,3 +117,6 @@ export function getColumns(
     },
   ];
 }
+export default function Constants () {
+  return (<></>)
+}

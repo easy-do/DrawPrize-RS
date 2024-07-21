@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Typography, Popconfirm } from '@arco-design/web-react';
+import { Button, Typography } from '@arco-design/web-react';
 import PermissionWrapper from '@/components/PermissionWrapper';
 import dayjs from 'dayjs';
 
@@ -129,4 +129,8 @@ export function getColumns(
       ],
     },
   ];
+}
+
+export default function Constants () {
+  return (<></>)
 }
