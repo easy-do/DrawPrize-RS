@@ -210,6 +210,24 @@ impl MigrationTrait for Migration {
             icon: NotSet,
             resource_desc: Set(Some("修改活动奖池物品接口".to_string())),
         }.insert(db).await?;
+        resource::ActiveModel {
+            id: Set(54),
+            parent_id: Set(29),
+            resource_name: Set(Some("开启活动奖池".to_string())),
+            resource_code: Set(Some("api_prize_pool_create_live_pool".to_string())),
+            resource_type: Set(Some(2)),
+            resource_root: Set(Some(false)),
+            resource_action: Set(Some(true)),
+            order_number: Set(Some(0)),
+            url: Default::default(),
+            api_path: Set(Some("/api/prize_pool/create_live_pool/".to_string())),
+            api_http_method: Set(Some("GET".to_string())),
+            api_path_regex: Set(Some(r"^/api/prize_pool/create_live_pool/\d+$".to_string())),
+            role: NotSet,
+            status: Set(Some(true)),
+            icon: NotSet,
+            resource_desc: Set(Some("开启活动奖池接口".to_string())),
+        }.insert(db).await?;
         role_resource::ActiveModel {
             id: NotSet,
             role_id: Set(1),
@@ -264,6 +282,11 @@ impl MigrationTrait for Migration {
             id: NotSet,
             role_id: Set(1),
             resource_id: Set(53),
+        }.insert(db).await?;
+        role_resource::ActiveModel {
+            id: NotSet,
+            role_id: Set(1),
+            resource_id: Set(54),
         }.insert(db).await?;
         Ok(())
     }
