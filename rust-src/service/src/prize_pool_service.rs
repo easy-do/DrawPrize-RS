@@ -41,7 +41,11 @@ pub async fn create_live_pool(db: &DbConn, id: i64) -> Result<i64, MyError> {
         }
         Some(pool) => {
             let items = prize_pool_item_manager::get_prize_pool_item_by_pool_id(db, pool.id).await?;
-            Ok(live_prize_pool_manager::create_live_pool(db, pool, items).await?)
+            if items.is_empty() {
+                Err(MyError::ServerError("还没有添加奖品,无法开启活动奖池".to_string()))
+            }else {
+                Ok(live_prize_pool_manager::create_live_pool(db, pool, items).await?)
+            }
         }
     }
 }
