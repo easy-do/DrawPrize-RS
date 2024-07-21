@@ -1,5 +1,5 @@
 [package]
-name = "prize-rs"
+name = "DrawPrize-RS"
 version = "0.1.0"
 authors = ["gebilaoyu"]
 edition = "2021"

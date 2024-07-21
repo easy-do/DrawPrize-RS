@@ -54,7 +54,8 @@ function Navbar({ show }: { show: boolean }) {
       const { success } = res.data;
       if (success) {
         localStorage.removeItem('Authorization')
-        window.location.pathname = 'home';
+        // window.location.pathname = '/home'; // 开发环境
+        window.location.pathname = '/static/home.html';//生产环境 需要配置成静态文件，否则会报404错误
       }
     });
   }
@@ -124,7 +125,7 @@ function Navbar({ show }: { show: boolean }) {
     <div className={styles.navbar}>
       <div className={styles.left}>
         <div className={styles.logo}>
-          <div className={styles['logo-name']}>Draw-RS</div>
+          <div className={styles['logo-name']}>DrawPrize-RS</div>
         </div>
       </div>
       <ul className={styles.right}>
