@@ -2,6 +2,7 @@ import {
   Form,
   FormInstance,
   Input,
+  InputNumber,
   Modal,
   Notification,
   Select,
@@ -54,7 +55,6 @@ function UpdatePage(props: { id: number; visible; setVisible; callback }) {
       setLoading(true);
       values.status = values.status == 'true';
       values.guarantees = values.guarantees == 'true';
-      values.quantity = Number(values.quantity);
       updatePrizePoolItem(values)
         .then((res) => {
           const { success, message } = res.data;
@@ -143,7 +143,7 @@ function UpdatePage(props: { id: number; visible; setVisible; callback }) {
           label={t['searchTable.columns.quantity']}
           field={'quantity'}
         >
-          <Input placeholder={t['searchForm.placeholder']} allowClear />
+          <InputNumber min={1} placeholder={t['searchForm.placeholder']} />
         </FormItem>
         <FormItem
           required

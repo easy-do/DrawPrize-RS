@@ -56,6 +56,13 @@ export const routes: IRoute[] = [
           { resource: 'live_prize_pool_manager', actions: [] },
         ],
       },
+      {
+        name: 'menu.cdkManager',
+        key: 'systemManager/cdkManager',
+        requiredPermissions: [
+          { resource: 'cdk_manager', actions: [] },
+        ],
+      },
     ],
   },
   {

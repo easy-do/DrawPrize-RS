@@ -8,11 +8,11 @@ use sea_orm::DbConn;
 
 use common::error::MyError;
 use common::page::PageResult;
-use entity::{live_prize_history, live_prize_pool, live_prize_pool_item};
+use entity::{live_prize_history, live_prize_pool, live_prize_pool_item, live_prize_pool_user};
 use model::prize::{LivePrizePoolPage, PoolDrawCount};
 use security::state::AuthState;
 
-use crate::manager::{live_prize_history_manager, live_prize_pool_item_manager, live_prize_pool_manager};
+use crate::manager::{live_prize_history_manager, live_prize_pool_item_manager, live_prize_pool_manager, live_prize_pool_user_manager};
 
 pub async fn list(db: &DbConn) -> Result<Vec<live_prize_pool::Model>, MyError> {
     Ok(live_prize_pool_manager::get_live_prize_pool_list(db).await?)
@@ -36,7 +36,7 @@ pub async fn page(db: &DbConn, page: LivePrizePoolPage) -> Result<PageResult<liv
     live_prize_pool_manager::page(db, page).await
 }
 
-pub async fn draw(db: &DbConn, live_id: i64, draw_num: i64, token: &str, req: HttpRequest) -> Result<Vec<live_prize_pool_item::PoolItemList>, MyError> {
+pub async fn draw(db: &DbConn, live_id: i64, draw_num: i32, token: &str, req: HttpRequest) -> Result<Vec<live_prize_pool_item::PoolItemList>, MyError> {
     let auth_state = req.app_data::<Arc<Mutex<AuthState>>>().ok_or(MyError::ServerError("get auth_state fail".to_string()))?;
     let auth_state = auth_state.lock().unwrap();
     let uid = auth_state.token_auth_cache.get(token).ok_or(MyError::UnauthorizedError("no auth cache".to_string()))?.uid;
@@ -46,6 +46,9 @@ pub async fn draw(db: &DbConn, live_id: i64, draw_num: i64, token: &str, req: Ht
             Err(MyError::ServerError("奖池不存在".to_string()))
         }
         Some(live_pool) => {
+            //查询用户剩余抽奖次数
+            let pool_user = live_prize_pool_user_manager::get_by_live_id_and_user_id(db, live_id, uid).await?;
+            let pool_user = check_pool_user(pool_user, draw_num)?;
             let db_items = live_prize_pool_item_manager::get_prize_pool_item_by_live_id(db, live_id).await?;
             if db_items.is_empty() {
                 Err(MyError::ServerError("奖池已空".to_string()))
@@ -65,9 +68,9 @@ pub async fn draw(db: &DbConn, live_id: i64, draw_num: i64, token: &str, req: Ht
                 }
                 if sun_count == 0 {
                     Err(MyError::ServerError("奖池物品已空".to_string()))
-                }else if sun_count< draw_num as i32{
+                } else if sun_count < draw_num as i32 {
                     Err(MyError::ServerError("当前抽取数量大于剩余奖品数量".to_string()))
-                }else{
+                } else {
                     let mut draw_item = Vec::new();
                     //执行n次抽奖逻辑  是否抽中用奖品概率来随机
                     for _ in 0..draw_num {
@@ -132,6 +135,9 @@ pub async fn draw(db: &DbConn, live_id: i64, draw_num: i64, token: &str, req: Ht
                         }
                     }
 
+                    //扣减抽奖次数
+                    live_prize_pool_user_manager::update_remaining_times(db, pool_user, draw_num).await?;
+
                     //扣减奖品库存
                     let mut item_map = HashMap::new();
                     for item in &draw_item {
@@ -155,10 +161,25 @@ pub async fn draw(db: &DbConn, live_id: i64, draw_num: i64, token: &str, req: Ht
                     }
 
                     //保存抽奖记录
-                    live_prize_history_manager::create_live_prize_history_data(db, live_id, live_pool.pool_id.unwrap(), uid, draw_num,result.clone()).await?;
+                    live_prize_history_manager::create_live_prize_history_data(db, live_id, live_pool.pool_id.unwrap(), uid, draw_num as i64, result.clone()).await?;
                     //返回抽奖结果
                     Ok(result)
                 }
+            }
+        }
+    }
+}
+
+pub fn check_pool_user(pool_user: Option<live_prize_pool_user::Model>, draw_num: i32) -> Result<live_prize_pool_user::Model, MyError> {
+    match pool_user {
+        None => {
+            Err(MyError::ServerError("抽奖次数不足".to_string()))
+        }
+        Some(pool_user) => {
+            if pool_user.remaining_times.unwrap() < draw_num.clone() as i32 {
+                Err(MyError::ServerError("抽奖次数不足".to_string()))
+            } else {
+                Ok(pool_user)
             }
         }
     }
@@ -176,11 +197,18 @@ pub async fn draw_history(db: &DbConn) -> Result<Vec<live_prize_history::DrawHis
     Ok(live_prize_history_manager::draw_history(db).await?)
 }
 
-pub async fn pool_draw_count(db: &DbConn, live_id: i64) -> Result<PoolDrawCount, MyError>  {
+pub async fn pool_draw_count(db: &DbConn, live_id: i64) -> Result<PoolDrawCount, MyError> {
     let draw_count = live_prize_history_manager::pool_draw_cation_count(db, live_id).await?;
     let remaining_quantity_count = live_prize_pool_item_manager::pool_item_remaining_quantity_count(db, live_id).await?;
-    Ok(PoolDrawCount{
+    Ok(PoolDrawCount {
         action: Option::from(draw_count),
         remaining_quantity: Option::from(remaining_quantity_count),
     })
+}
+
+pub async fn user_draw_remaining_times(db: &DbConn, live_id: i64, token: &str, req: HttpRequest) -> Result<i32, MyError> {
+    let auth_state = req.app_data::<Arc<Mutex<AuthState>>>().ok_or(MyError::ServerError("get auth_state fail".to_string()))?;
+    let auth_state = auth_state.lock().unwrap();
+    let uid = auth_state.token_auth_cache.get(token).ok_or(MyError::UnauthorizedError("no auth cache".to_string()))?.uid;
+    Ok(live_prize_pool_user_manager::user_draw_remaining_times(db, live_id, uid).await?)
 }

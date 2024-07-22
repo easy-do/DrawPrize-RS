@@ -2,6 +2,7 @@ import {
   Form,
   FormInstance,
   Input,
+  InputNumber,
   Modal,
   Notification,
   Select,
@@ -108,10 +109,9 @@ function UpdatePage(props: { id: number; visible; setVisible; callback }) {
           label={t['searchTable.columns.level']}
           field={'level'}
         >
-          <Input
+          <InputNumber
             type="number"
             placeholder={t['searchForm.placeholder']}
-            allowClear
           />
         </FormItem>
         <FormItem

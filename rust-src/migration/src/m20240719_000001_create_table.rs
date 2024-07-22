@@ -228,66 +228,13 @@ impl MigrationTrait for Migration {
             icon: NotSet,
             resource_desc: Set(Some("开启活动奖池接口".to_string())),
         }.insert(db).await?;
-        role_resource::ActiveModel {
-            id: NotSet,
-            role_id: Set(1),
-            resource_id: Set(43),
-        }.insert(db).await?;
-        role_resource::ActiveModel {
-            id: NotSet,
-            role_id: Set(1),
-            resource_id: Set(44),
-        }.insert(db).await?;
-        role_resource::ActiveModel {
-            id: NotSet,
-            role_id: Set(1),
-            resource_id: Set(45),
-        }.insert(db).await?;
-        role_resource::ActiveModel {
-            id: NotSet,
-            role_id: Set(1),
-            resource_id: Set(46),
-        }.insert(db).await?;
-        role_resource::ActiveModel {
-            id: NotSet,
-            role_id: Set(1),
-            resource_id: Set(47),
-        }.insert(db).await?;
-        role_resource::ActiveModel {
-            id: NotSet,
-            role_id: Set(1),
-            resource_id: Set(48),
-        }.insert(db).await?;
-        role_resource::ActiveModel {
-            id: NotSet,
-            role_id: Set(1),
-            resource_id: Set(49),
-        }.insert(db).await?;
-        role_resource::ActiveModel {
-            id: NotSet,
-            role_id: Set(1),
-            resource_id: Set(50),
-        }.insert(db).await?;
-        role_resource::ActiveModel {
-            id: NotSet,
-            role_id: Set(1),
-            resource_id: Set(51),
-        }.insert(db).await?;
-        role_resource::ActiveModel {
-            id: NotSet,
-            role_id: Set(1),
-            resource_id: Set(52),
-        }.insert(db).await?;
-        role_resource::ActiveModel {
-            id: NotSet,
-            role_id: Set(1),
-            resource_id: Set(53),
-        }.insert(db).await?;
-        role_resource::ActiveModel {
-            id: NotSet,
-            role_id: Set(1),
-            resource_id: Set(54),
-        }.insert(db).await?;
+        for id in 43..55 {
+            role_resource::ActiveModel {
+                id: NotSet,
+                role_id: Set(1),
+                resource_id: Set(id),
+            }.insert(db).await?;
+        }
         Ok(())
     }
 

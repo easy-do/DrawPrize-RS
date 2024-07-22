@@ -7,11 +7,12 @@ import {
   Button,
   Card,
   Grid,
-  Link,
+  Input,
   List,
   Modal,
   Notification,
   Select,
+  Space,
 } from '@arco-design/web-react';
 import {
   drawLivePrizePool,
@@ -19,10 +20,13 @@ import {
   getLivePrizePoolSelectList,
   getPoolDrawCount,
   getPrizeItemList,
+  getUserDrawRemainingTimes,
   topDraw,
 } from '@/api/livePrizePool';
 import ScrollableCard from './ScrollableCard';
 import ScrollableCardList from './ScrollableCardList';
+import { useCdk } from '@/api/cdk';
+import checkLogin from '@/utils/checkLogin';
 const Row = Grid.Row;
 const Col = Grid.Col;
 
@@ -48,6 +52,11 @@ export default function Welcome() {
   const [currentPoolDrawCountData, setCurrentPoolDrawCountData] = useState({action:0,remaining_quantity:0});
   //最新中奖信息
   const [drawHistoryData, setDrawHistoryData] = useState([]);
+  const [userDrawRemainingTimes, setUserDrawRemainingTimes] = useState('-');
+
+  //CDK兑换
+  const [useCdktVisible, setUseCdktVisible] = useState(false);
+  const [cdktValues, setCdktValues] = useState('');
 
   function getDrawHistoryData() {
     getDrawHistory().then((res) => {
@@ -80,6 +89,7 @@ export default function Welcome() {
     getCurrentPoolItemData(value);
     getTopDrawData();
     getCurrentPoolDrawCountData(value);
+    getUserDrawRemainingTimesData(value);
   }
 
   function getCurrentPoolItemData(currentPoolId) {
@@ -98,6 +108,18 @@ export default function Welcome() {
       }
     });
   }
+  function getUserDrawRemainingTimesData(currentPoolId) {
+    if(checkLogin()){
+      getUserDrawRemainingTimes(currentPoolId).then((res) => {
+        const { success, data } = res.data;
+        if (success) {
+          setUserDrawRemainingTimes(data);
+        }
+      });
+    }
+  }
+
+
 
   function getTopDrawData() {
     topDraw().then((res) => {
@@ -126,6 +148,7 @@ export default function Welcome() {
           setCurrentPoolId(data[0].id);
           getCurrentPoolItemData(data[0].id);
           getCurrentPoolDrawCountData(data[0].id);
+          getUserDrawRemainingTimesData(data[0].id);
         }
       }
     });
@@ -149,10 +172,13 @@ export default function Welcome() {
       <Row gutter={20} style={{ marginBottom: 20 }}>
         <Col span={20}>
           <Card
-            title={ <div>当前奖池累积抽取<span style={{color:'blue'}}>{currentPoolDrawCountData.action}</span> 次 剩余奖品 <span style={{color:'blue'}}>{currentPoolDrawCountData.remaining_quantity}</span></div>}
+            title={ <div>当前奖池累积抽取:<span style={{color:'blue'}}>{currentPoolDrawCountData.action}</span> 次 剩余奖品: <span style={{color:'blue'}}>{currentPoolDrawCountData.remaining_quantity}</span> 可抽次数: <span style={{color:'blue'}}>{userDrawRemainingTimes}</span></div>}
             extra={
               <>
+              <Space>
                 <Select placeholder="切换奖池" options={poolSelectData} onChange={poolSelectOnChange} />
+              <Button type='primary' onClick={()=>setUseCdktVisible(true)}>CDK兑换</Button>
+              </Space>
               </>
             }
             bordered={false}
@@ -171,6 +197,7 @@ export default function Welcome() {
                       getCurrentPoolItemData(currentPoolId);
                       getDrawHistoryData();
                       getCurrentPoolDrawCountData(currentPoolId);
+                      getUserDrawRemainingTimesData(currentPoolId);
                     } else {
                       Notification.error({ content: message, duration: 1000 });
                     }
@@ -193,6 +220,7 @@ export default function Welcome() {
                       getCurrentPoolItemData(currentPoolId);
                       getDrawHistoryData();
                       getCurrentPoolDrawCountData(currentPoolId);
+                      getUserDrawRemainingTimesData(currentPoolId);
                     } else {
                       Notification.error({ content: message, duration: 1000 });
                     }
@@ -256,6 +284,23 @@ export default function Welcome() {
               />
             )}
         />
+      </Modal>
+      <Modal
+        title={'CDK兑换'}
+        style={{ minWidth: '30%', minHeight: '30%' }}
+        visible={useCdktVisible}
+        onCancel={() => setUseCdktVisible(false)}
+        onConfirm={() => {
+          useCdk(cdktValues.split('\n')).then((res) => {
+            const { success, data } = res.data;
+            if (success) {
+              setUseCdktVisible(false);
+              Notification.success({ content: '成功兑换'+data+'个', duration: 1000 });
+            }
+          });
+        }}
+      >
+          <Input.TextArea style={{minHeight:'300px'}} defaultValue={cdktValues} onChange={(value)=>setCdktValues(value)}  placeholder='每行一个' allowClear />
       </Modal>
     </div>
   );
