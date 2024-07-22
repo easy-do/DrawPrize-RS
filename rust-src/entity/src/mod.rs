@@ -12,4 +12,5 @@ pub mod prize_pool_item;
 pub mod live_prize_pool;
 pub mod live_prize_pool_item;
 pub mod live_prize_history;
-
+pub mod cdk;
+pub mod live_prize_pool_user;

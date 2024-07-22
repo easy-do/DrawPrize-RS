@@ -45,9 +45,9 @@ impl MigrationTrait for Migration {
                             .primary_key(),
                     )
                     .col(ColumnDef::new(LivePrizePoolUser::LiveId).big_integer().comment("活动奖池id"))
-                    .col(ColumnDef::new(LivePrizePoolUser::UserId).big_integer().char_len(64).comment("角色i"))
+                    .col(ColumnDef::new(LivePrizePoolUser::UserId).big_integer().comment("角色i"))
                     .col(ColumnDef::new(LivePrizePoolUser::Enable).boolean().default(1).comment("奖池开关"))
-                    .col(ColumnDef::new(LivePrizePoolUser::RemainingTimes).integer().comment("剩余抽奖次数"))
+                    .col(ColumnDef::new(LivePrizePoolUser::RemainingTimes).integer().default(0).comment("剩余抽奖次数"))
                     .col(ColumnDef::new(LivePrizePoolUser::CreateTime).date_time().comment("创建时间"))
                     .col(ColumnDef::new(LivePrizePoolUser::UpdateTime).date_time().comment("更新时间"))
                     .to_owned(),

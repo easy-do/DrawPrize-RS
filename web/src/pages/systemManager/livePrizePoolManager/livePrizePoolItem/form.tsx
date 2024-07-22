@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react';
-import { Form, Input, Button, Grid, Select } from '@arco-design/web-react';
+import { Form, Input, Button, Grid, Select, InputNumber } from '@arco-design/web-react';
 import { GlobalContext } from '@/context';
 import locale from './locale';
 import useLocale from '@/utils/useLocale';
@@ -55,10 +55,10 @@ function SearchForm(props: {
           </Col>
           <Col span={colSpan}>
             <Form.Item label={t['searchTable.columns.level']} field={'level'}>
-              <Input
+              <InputNumber
+                min={1}
                 type="number"
                 placeholder={t['searchForm.placeholder']}
-                allowClear
               />
             </Form.Item>
           </Col>

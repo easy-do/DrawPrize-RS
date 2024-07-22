@@ -25,7 +25,7 @@ impl MigrationTrait for Migration {
             api_path: Set(Some("/api/user/set_role".to_string())),
             api_http_method: Set(Some("POST".to_string())),
             api_path_regex: NotSet,
-            role: Set(Some("admin".to_string())),
+            role: NotSet,
             status: Set(Some(true)),
             icon: NotSet,
             resource_desc: Set(Some("关联角色接口".to_string())),
@@ -43,7 +43,7 @@ impl MigrationTrait for Migration {
             api_path: Set(Some("/api/user/reset_password".to_string())),
             api_http_method: Set(Some("POST".to_string())),
             api_path_regex: NotSet,
-            role: Set(Some("admin".to_string())),
+            role: NotSet,
             status: Set(Some(true)),
             icon: NotSet,
             resource_desc: Set(Some("重置密码接口".to_string())),
@@ -61,26 +61,18 @@ impl MigrationTrait for Migration {
             api_path: Set(Some("/api/role/set_resource".to_string())),
             api_http_method: Set(Some("POST".to_string())),
             api_path_regex: NotSet,
-            role: Set(Some("admin".to_string())),
+            role: NotSet,
             status: Set(Some(true)),
             icon: NotSet,
             resource_desc: Set(Some("关联资源接口".to_string())),
         }.insert(db).await?;
-        role_resource::ActiveModel {
-            id: NotSet,
-            role_id: Set(1),
-            resource_id: Set(26),
-        }.insert(db).await?;
-        role_resource::ActiveModel {
-            id: NotSet,
-            role_id: Set(1),
-            resource_id: Set(27),
-        }.insert(db).await?;
-        role_resource::ActiveModel {
-            id: NotSet,
-            role_id: Set(1),
-            resource_id: Set(28),
-        }.insert(db).await?;
+        for id in 26..29 {
+            role_resource::ActiveModel {
+                id: NotSet,
+                role_id: Set(1),
+                resource_id: Set(id),
+            }.insert(db).await?;
+        }
         Ok(())
     }
 

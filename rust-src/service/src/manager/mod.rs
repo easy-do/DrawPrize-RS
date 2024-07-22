@@ -6,3 +6,5 @@ pub mod prize_pool_item_manager;
 pub mod live_prize_pool_manager;
 pub mod live_prize_pool_item_manager;
 pub mod live_prize_history_manager;
+pub mod cdk_manager;
+pub mod live_prize_pool_user_manager;

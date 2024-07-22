@@ -13,6 +13,7 @@ async fn list(app_state: web::Data<AppState>) -> Result<HttpResponse, MyError> {
     let resource_list = live_prize_pool_service::list(&app_state.db).await?;
     Ok(HttpResponse::Ok().json(JsonResult::ok(resource_list)))
 }
+
 #[get("/un-auth-api/live_prize_pool/select_list")]
 async fn select_list(app_state: web::Data<AppState>) -> Result<HttpResponse, MyError> {
     let resource_list = live_prize_pool_service::select_list(&app_state.db).await?;
@@ -42,9 +43,9 @@ async fn update(app_state: web::Data<AppState>,
 
 #[get("/api/live_prize_pool/draw/{live_id}/{draw_num}")]
 async fn draw(app_state: web::Data<AppState>,
-              params: web::Path<(i64,i64)>,
+              params: web::Path<(i64, i32)>,
               req: HttpRequest,
-              authorization : web::Header<Authorization>,) -> Result<HttpResponse, MyError> {
+              authorization: web::Header<Authorization>, ) -> Result<HttpResponse, MyError> {
     let res = live_prize_pool_service::draw(&app_state.db, params.0, params.1, &*authorization.into_inner().token_value, req).await?;
     Ok(HttpResponse::Ok().json(JsonResult::ok(res)))
 }
@@ -68,7 +69,16 @@ async fn draw_history(app_state: web::Data<AppState>) -> Result<HttpResponse, My
 }
 
 #[get("/un-auth-api/live_prize_pool/pool_draw_count/{live_id}")]
-async fn pool_draw_count(app_state: web::Data<AppState>,params: web::Path<i64>) -> Result<HttpResponse, MyError> {
-    let res = live_prize_pool_service::pool_draw_count(&app_state.db,params.into_inner()).await?;
+async fn pool_draw_count(app_state: web::Data<AppState>, params: web::Path<i64>) -> Result<HttpResponse, MyError> {
+    let res = live_prize_pool_service::pool_draw_count(&app_state.db, params.into_inner()).await?;
+    Ok(HttpResponse::Ok().json(JsonResult::ok(res)))
+}
+
+#[get("/api/live_prize_pool/user_draw_remaining_times/{live_id}")]
+async fn user_draw_remaining_times(app_state: web::Data<AppState>,
+                                   params: web::Path<i64>,
+                                   req: HttpRequest,
+                                   authorization: web::Header<Authorization>) -> Result<HttpResponse, MyError> {
+    let res = live_prize_pool_service::user_draw_remaining_times(&app_state.db, params.into_inner(), &*authorization.into_inner().token_value, req).await?;
     Ok(HttpResponse::Ok().json(JsonResult::ok(res)))
 }

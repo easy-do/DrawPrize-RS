@@ -3,6 +3,7 @@ import {
   Form,
   FormInstance,
   Input,
+  InputNumber,
   Modal,
   Notification,
   Select,
@@ -32,8 +33,6 @@ function AddPage(props: {
       setLoading(true);
       values.status = values.status == 'true';
       values.guarantees = values.guarantees == 'true';
-      values.level = Number(values.level);
-      values.quantity = Number(values.quantity);
       addPrizePoolItem(values)
         .then((res) => {
           const { success, message } = res.data;
@@ -99,10 +98,10 @@ function AddPage(props: {
           label={t['searchTable.columns.level']}
           field={'level'}
         >
-          <Input
+          <InputNumber
+            min={1}
             type="number"
             placeholder={t['searchForm.placeholder']}
-            allowClear
           />
         </FormItem>
         <FormItem
@@ -124,7 +123,7 @@ function AddPage(props: {
           label={t['searchTable.columns.quantity']}
           field={'quantity'}
         >
-          <Input placeholder={t['searchForm.placeholder']} allowClear />
+          <InputNumber min={1} placeholder={t['searchForm.placeholder']} />
         </FormItem>
         <FormItem
           required

@@ -87,7 +87,8 @@ fn has_permission(req: &ServiceRequest) -> Result<bool, MyError> {
 
     //校验是否为api开头需要授权的接口
     let request_path = req.path();
-    info!("request path:{:?}", request_path);
+    let request_method = req.method().to_string();
+    info!("request {:?}:{:?}", request_method,request_path);
     if request_path.starts_with("/api") {
         // 校验token
         let token = req.headers().get(AUTHORIZATION).ok_or(MyError::UnauthorizedError("未携带授权凭证".to_string()))?
@@ -96,12 +97,10 @@ fn has_permission(req: &ServiceRequest) -> Result<bool, MyError> {
         //获取鉴权配置
         let auth_state = req.request().app_data::<Arc<Mutex<AuthState>>>()
             .ok_or(MyError::UnauthorizedError("get AuthState fail".to_string()))?;
-        let auth_state = auth_state.lock().unwrap();
-        let auth_conf = &auth_state.auth_conf;
-        let token_auth_cache = &auth_state.token_auth_cache.get(token).ok_or(MyError::UnauthorizedError("授权已过期".to_string()))?;
+        let auth_data = auth_state.lock().unwrap();
+        let auth_conf = &auth_data.auth_conf;
+        let token_auth_cache = &auth_data.token_auth_cache.get(token).ok_or(MyError::UnauthorizedError("授权已过期".to_string()))?;
         //先根据请求方法分流
-        let request_method = req.method().to_string();
-        info!("request method:{:?}",request_method);
         let method_conf = &auth_conf.method;
         if method_conf.is_some() {
             //如果存在根据请求方法鉴权的规则就尝试解析对应方法下的规则

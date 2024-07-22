@@ -31,51 +31,13 @@ impl MigrationTrait for Migration {
             .await?;
         let db = manager.get_connection();
         //关联角色资源
-        role_resource::ActiveModel {
-            id: NotSet,
-            role_id: Set(1),
-            resource_id: Set(1),
-        }.insert(db).await?;
-        role_resource::ActiveModel {
-            id: NotSet,
-            role_id: Set(1),
-            resource_id: Set(2),
-        }.insert(db).await?;
-        role_resource::ActiveModel {
-            id: NotSet,
-            role_id: Set(1),
-            resource_id: Set(3),
-        }.insert(db).await?;
-        role_resource::ActiveModel {
-            id: NotSet,
-            role_id: Set(1),
-            resource_id: Set(4),
-        }.insert(db).await?;
-        role_resource::ActiveModel {
-            id: NotSet,
-            role_id: Set(1),
-            resource_id: Set(5),
-        }.insert(db).await?;
-        role_resource::ActiveModel {
-            id: NotSet,
-            role_id: Set(1),
-            resource_id: Set(6),
-        }.insert(db).await?;
-        role_resource::ActiveModel {
-            id: NotSet,
-            role_id: Set(1),
-            resource_id: Set(7),
-        }.insert(db).await?;
-        role_resource::ActiveModel {
-            id: NotSet,
-            role_id: Set(1),
-            resource_id: Set(8),
-        }.insert(db).await?;
-        role_resource::ActiveModel {
-            id: NotSet,
-            role_id: Set(1),
-            resource_id: Set(9),
-        }.insert(db).await?;
+        for id in 1..10 {
+            role_resource::ActiveModel {
+                id: NotSet,
+                role_id: Set(1),
+                resource_id: Set(id),
+            }.insert(db).await?;
+        }
         Ok(())
     }
 

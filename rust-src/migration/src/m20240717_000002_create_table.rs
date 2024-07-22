@@ -133,51 +133,18 @@ impl MigrationTrait for Migration {
             api_path: Set(Some("/api/prize_pool/delete".to_string())),
             api_http_method: Set(Some("GET".to_string())),
             api_path_regex: Set(Some(r"^/api/prize_pool/delete/\d+$".to_string())),
-            role: Set(Some("admin".to_string())),
+            role: NotSet,
             status: Set(Some(true)),
             icon: NotSet,
             resource_desc: Set(Some("删除奖池接口".to_string())),
         }.insert(db).await?;
-        role_resource::ActiveModel {
-            id: NotSet,
-            role_id: Set(1),
-            resource_id: Set(28),
-        }.insert(db).await?;
-        role_resource::ActiveModel {
-            id: NotSet,
-            role_id: Set(1),
-            resource_id: Set(29),
-        }.insert(db).await?;
-        role_resource::ActiveModel {
-            id: NotSet,
-            role_id: Set(1),
-            resource_id: Set(30),
-        }.insert(db).await?;
-        role_resource::ActiveModel {
-            id: NotSet,
-            role_id: Set(1),
-            resource_id: Set(31),
-        }.insert(db).await?;
-        role_resource::ActiveModel {
-            id: NotSet,
-            role_id: Set(1),
-            resource_id: Set(32),
-        }.insert(db).await?;
-        role_resource::ActiveModel {
-            id: NotSet,
-            role_id: Set(1),
-            resource_id: Set(33),
-        }.insert(db).await?;
-        role_resource::ActiveModel {
-            id: NotSet,
-            role_id: Set(1),
-            resource_id: Set(34),
-        }.insert(db).await?;
-        role_resource::ActiveModel {
-            id: NotSet,
-            role_id: Set(1),
-            resource_id: Set(35),
-        }.insert(db).await?;
+        for id in 29..36 {
+            role_resource::ActiveModel {
+                id: NotSet,
+                role_id: Set(1),
+                resource_id: Set(id),
+            }.insert(db).await?;
+        }
         Ok(())
     }
 

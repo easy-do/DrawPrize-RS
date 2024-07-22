@@ -11,4 +11,5 @@ export const topDraw = () => get("/un-auth-api/live_prize_pool/top_draw");
 export const getPrizeItemList = (live_id) => get("/un-auth-api/live_prize_pool/prize_item_list/"+live_id);
 export const getDrawHistory = () => get("/un-auth-api/live_prize_pool/draw_history");
 export const getPoolDrawCount = (live_id) => get("/un-auth-api/live_prize_pool/pool_draw_count/"+live_id);
+export const getUserDrawRemainingTimes = (live_id) => get("/api/live_prize_pool/user_draw_remaining_times/"+live_id);
 
