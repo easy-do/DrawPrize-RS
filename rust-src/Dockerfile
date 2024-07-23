@@ -15,6 +15,7 @@ ADD . /service /DrawPrize-RS/service/
 ADD . /src /DrawPrize-RS/src/
 COPY . /config.yaml /DrawPrize-RS/
 COPY . /Cargo.toml /DrawPrize-RS/
+ADD . /static /DrawPrize-RS/static/
 RUN cargo build --release
 
 
@@ -23,6 +24,7 @@ FROM registry.cn-hangzhou.aliyuncs.com/gebilaoyu/ubuntu:24.10
 
 COPY --from=compiler /DrawPrize-RS/target/release/DrawPrize-RS /apps/
 COPY --from=compiler /DrawPrize-RS/config.yaml /apps/
+COPY --from=compiler /DrawPrize-RS/static /apps/static/
 
 #ENV HOST=0.0.0.0
 #ENV PORT=8080
