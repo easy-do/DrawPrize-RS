@@ -89,7 +89,7 @@ function SearchTable() {
       if (success) {
         const blob = new Blob([data]);
         const objectURL = URL.createObjectURL(blob);
-        let btn = document.createElement('a');
+        const btn = document.createElement('a');
         btn.download = 'CDK导出.txt';
         btn.href = objectURL;
         btn.click();
