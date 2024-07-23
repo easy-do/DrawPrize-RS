@@ -23,7 +23,6 @@ impl MigrationTrait for Migration {
         let api_path = ["", "/api/cdk/info/", "/api/cdk/page", "/api/cdk/add", "/api/cdk/update", "/api/cdk/delete", "/api/cdk/export"];
         let api_http_method = ["GET", "GET", "POST", "POST", "POST", "POST", "POST"];
         let status = [true, true, true, true, true, true, true];
-        let api_path_regex = [r"^/api/cdk/info/\d+$", "", "", "", "", "", "", ""];
         let resource_desc = ["CDK管理菜单", "CDK详情接口", "CDK分页查询接口", "添加CDK接口", "修改CDK接口", "删除CDK接口", "导出CDK接口"];
         let db = manager.get_connection();
         for index in 0..ids.len() {
@@ -42,7 +41,7 @@ impl MigrationTrait for Migration {
                 role: NotSet,
                 status: Set(Option::from(status[index])),
                 icon: NotSet,
-                api_path_regex: Set(Option::from(api_path_regex[index].to_string())),
+                api_path_regex: NotSet,
                 resource_desc: Set(Option::from(resource_desc[index].to_string())),
             }.insert(db).await?;
         }
