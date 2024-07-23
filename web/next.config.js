@@ -54,8 +54,8 @@ module.exports = withLess(
         },
       ];
     },
-    assetPrefix: "/static/",  // 开发环境禁用 生产环境打开 需要配置成静态文件，否则会报404错误 
-    basePath: "/static",  //开发环境禁用 生产环境打开 需要配置成静态文件，否则会报404错误
+    // assetPrefix: "/static/",  // 开发环境禁用 生产环境打开 需要配置成静态文件，否则会报404错误 
+    // basePath: "/static",  //开发环境禁用 生产环境打开 需要配置成静态文件，否则会报404错误
     pageExtensions: ['tsx'],
   })
 );

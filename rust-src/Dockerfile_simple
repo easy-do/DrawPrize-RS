@@ -1,0 +1,15 @@
+
+# Run
+FROM registry.cn-hangzhou.aliyuncs.com/gebilaoyu/ubuntu:24.10
+
+COPY ./target/release/DrawPrize-RS /apps/
+COPY ./config.yaml /apps/
+COPY ./static /apps/static/
+
+#ENV HOST=0.0.0.0
+#ENV PORT=8080
+#ENV RUST_LOG=info
+#ENV DATABASE_URL=sqlite://db.sqlite?mode=rwc
+
+WORKDIR /apps
+CMD ["./DrawPrize-RS"]
