@@ -25,7 +25,7 @@ import {
 } from '@/api/livePrizePool';
 import ScrollableCard from './ScrollableCard';
 import ScrollableCardList from './ScrollableCardList';
-import { useCdk } from '@/api/cdk';
+import { requetUseCdk } from '@/api/cdk';
 import checkLogin from '@/utils/checkLogin';
 const Row = Grid.Row;
 const Col = Grid.Col;
@@ -291,7 +291,7 @@ export default function Welcome() {
         visible={useCdktVisible}
         onCancel={() => setUseCdktVisible(false)}
         onConfirm={() => {
-          useCdk(cdktValues.split('\n')).then((res) => {
+          requetUseCdk(cdktValues.split('\n')).then((res) => {
             const { success, data } = res.data;
             if (success) {
               setUseCdktVisible(false);
