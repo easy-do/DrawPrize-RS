@@ -6,6 +6,7 @@ import {
   Modal,
   Notification,
   Select,
+  Upload,
 } from '@arco-design/web-react';
 import locale from './locale';
 import useLocale from '@/utils/useLocale';
@@ -14,6 +15,8 @@ import { useContext, useEffect, useRef } from 'react';
 import React from 'react';
 import FormItem from '@arco-design/web-react/es/Form/form-item';
 import { getPrizePoolItemInfo, updatePrizePoolItem } from '@/api/prizePoolItem';
+import { UploadItem } from '@arco-design/web-react/es/Upload';
+import { base64ToFile, fileToBase64 } from '@/utils/fileutil';
 
 function UpdatePage(props: { id: number; visible; setVisible; callback }) {
   const formRef = useRef<FormInstance>();
@@ -21,6 +24,22 @@ function UpdatePage(props: { id: number; visible; setVisible; callback }) {
   const { lang } = useContext(GlobalContext);
 
   const [loading, setLoading] = React.useState(false);
+
+  
+  const [fileList, setFileList] = React.useState<UploadItem[]>([]);
+  const [base64File, setBase64File] = React.useState('');
+
+  function base64ToFileList(base64){
+    if (base64){
+      const file = base64ToFile(base64, 'icon.png');
+      setFileList([{   
+       uid: '1',
+       status: 'done',
+       originFile: file,
+       percent: 100,
+       name: 'icon.png'}])
+    }
+  }
 
   //加载数据
   function fetchData() {
@@ -33,6 +52,7 @@ function UpdatePage(props: { id: number; visible; setVisible; callback }) {
             data.status = data.status + '';
             data.guarantees = data.guarantees + '';
             data.share_pool = data.share_pool + '';
+            base64ToFileList(data.icon);
             formRef.current.setFieldsValue(data);
           }
           setLoading(false);
@@ -55,6 +75,7 @@ function UpdatePage(props: { id: number; visible; setVisible; callback }) {
       setLoading(true);
       values.status = values.status == 'true';
       values.guarantees = values.guarantees == 'true';
+      values.icon = base64File;
       updatePrizePoolItem(values)
         .then((res) => {
           const { success, message } = res.data;
@@ -111,7 +132,25 @@ function UpdatePage(props: { id: number; visible; setVisible; callback }) {
           <Input placeholder={t['searchForm.placeholder']} allowClear />
         </FormItem>
         <FormItem required label={t['searchTable.columns.icon']} field={'icon'}>
-          <Input placeholder={t['searchForm.placeholder']} allowClear />
+          <Upload
+              listType='picture-card'
+              autoUpload={false}
+              limit={1}
+              showUploadList={{
+                previewIcon : null
+              }}
+              onChange={(list)=>{
+                setFileList(list);
+                if (list.length > 0) {
+                  fileToBase64(list[0].originFile,(base64)=>{
+                    setBase64File(base64)
+                  })
+                }else{
+                  setBase64File('')
+                }
+              }}
+              fileList={fileList}
+            />
         </FormItem>
         <FormItem
           required

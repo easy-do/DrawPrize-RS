@@ -7,12 +7,15 @@ import {
   Modal,
   Notification,
   Select,
+  Upload,
 } from '@arco-design/web-react';
 import locale from './locale';
 import useLocale from '@/utils/useLocale';
 import { GlobalContext } from '@/context';
 import { addPrizePoolItem } from '@/api/prizePoolItem';
 import FormItem from '@arco-design/web-react/es/Form/form-item';
+import { UploadItem } from '@arco-design/web-react/es/Upload';
+import { fileToBase64 } from '@/utils/fileutil';
 
 function AddPage(props: {
   visible;
@@ -28,11 +31,15 @@ function AddPage(props: {
 
   const [loading, setLoading] = React.useState(false);
 
+  const [fileList, setFileList] = React.useState<UploadItem[]>([]);
+  const [base64File, setBase64File] = React.useState('');
+
   const handleSubmit = () => {
     formRef.current.validate().then((values) => {
       setLoading(true);
       values.status = values.status == 'true';
       values.guarantees = values.guarantees == 'true';
+      values.icon = base64File;
       addPrizePoolItem(values)
         .then((res) => {
           const { success, message } = res.data;
@@ -91,7 +98,25 @@ function AddPage(props: {
           <Input placeholder={t['searchForm.placeholder']} allowClear />
         </FormItem>
         <FormItem required label={t['searchTable.columns.icon']} field={'icon'}>
-          <Input placeholder={t['searchForm.placeholder']} allowClear />
+          <Upload
+              listType='picture-card'
+              autoUpload={false}
+              limit={1}
+              showUploadList={{
+                previewIcon : null
+              }}
+              onChange={(list)=>{
+                setFileList(list);
+                if (list.length > 0) {
+                  fileToBase64(list[0].originFile,(base64)=>{
+                    setBase64File(base64)
+                  })
+                }else{
+                  setBase64File('')
+                }
+              }}
+              fileList={fileList}
+            />
         </FormItem>
         <FormItem
           required
