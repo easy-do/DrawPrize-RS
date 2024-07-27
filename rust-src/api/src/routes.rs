@@ -1,13 +1,14 @@
-use actix_files::Files;
+use actix_files::{Files, NamedFile};
+use actix_web::dev::{ServiceRequest, ServiceResponse};
 use actix_web::web;
 
 use crate::controller::{auth_controller, cdk_controller, live_prize_pool_controller, live_prize_pool_item_controller, prize_draw_history_controller, prize_pool_controller, prize_pool_item_controller, resource_controller, role_controller, user_controller};
 use crate::controller::health::health_check;
+use crate::controller::index::{home, index};
 
 // 生成路由地址
 pub fn general_routes(cfg: &mut web::ServiceConfig) {
     cfg.route("/health", web::get().to(health_check));
-    cfg.service(Files::new("/static", "static").show_files_listing());
     role_routes(cfg);
     user_routes(cfg);
     resource_routes(cfg);
@@ -18,6 +19,12 @@ pub fn general_routes(cfg: &mut web::ServiceConfig) {
     live_prize_pool_item_routes(cfg);
     prize_draw_history_routes(cfg);
     cdk_routes(cfg);
+    //默认打开静态资源的index.html
+    cfg.service(index);
+    //首页 home.html
+    cfg.service(home);
+    //挂载静态资源, 静态文件存放在相对路径的static目录内, 该项需要最后设置，因为挂载的访问地址是根路径/,在他之后的所有路由配置将会失效
+    static_file_routes(cfg);
 }
 
 pub fn cdk_routes(cfg: &mut web::ServiceConfig) {
@@ -120,3 +127,15 @@ pub fn auth_routes(cfg: &mut web::ServiceConfig) {
         .service(auth_controller::email_login);
 }
 
+pub fn static_file_routes(cfg: &mut web::ServiceConfig) {
+    cfg.service(Files::new("/", "static")
+        //路径下的默认文件
+        .index_file("index.html")
+        //如果找不到默认文件则打开静态资源根目录的index.html 可以解决游览器刷新后报错找不到文件的问题
+        .default_handler(|req: ServiceRequest| async {
+            let (req, _) = req.into_parts();
+            let file = NamedFile::open_async("static/index.html").await?;
+            let res = file.into_response(&req);
+            Ok(ServiceResponse::new(req, res))
+        }));
+}

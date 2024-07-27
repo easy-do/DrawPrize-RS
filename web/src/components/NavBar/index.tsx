@@ -54,8 +54,7 @@ function Navbar({ show }: { show: boolean }) {
       const { success } = res.data;
       if (success) {
         localStorage.removeItem('Authorization')
-        // window.location.pathname = '/home'; // 开发环境
-        window.location.pathname = '/static/home.html';//生产环境打开 需要配置成静态文件，否则会报404错误
+        window.location.pathname = '/home';
       }
     });
   }
