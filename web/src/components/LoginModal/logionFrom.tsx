@@ -38,8 +38,7 @@ export default function LoginForm() {
     // 记录登录状态
     localStorage.setItem('Authorization', data);
     // 跳转首页
-    // window.location.pathname = '/home'; // 开发环境
-    window.location.pathname = '/static/home.html';//生产环境打开 需要配置成静态文件，否则会报404错误
+    window.location.pathname = '/home';
   }
 
   function login(params) {

@@ -36,8 +36,7 @@ module.exports = withLess(
       return [
         {
           source: '/',
-          destination: '/static/home.html', //生产环境打开 需要配置成静态文件，否则会报404错误
-          // destination: '/home', //开发环境
+          destination: '/home',
           permanent: true,
         },
       ];
