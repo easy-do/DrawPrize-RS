@@ -3,6 +3,10 @@
 #### 介绍 desc
 一个使用rust实现的抽奖系统 ，A lottery system implemented using Rust
 
+https://github.com/easy-do/DrawPrize-RS
+
+https://gitee.com/yuzhanfeng/DrawPrize-RS
+
 #### 软件架构 Software architecture
 Rust
 actix
