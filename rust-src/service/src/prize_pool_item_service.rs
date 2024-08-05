@@ -33,3 +33,6 @@ pub async fn page(db: &DbConn, page: PrizePoolItemPage) -> Result<PageResult<pri
     prize_pool_item_manager::page(db, page).await
 }
 
+pub async fn get_by_pool_id(db: &DbConn, pool_id: i64) -> Result<Vec<prize_pool_item::Model>, MyError>  {
+   prize_pool_item_manager::get_prize_pool_item_by_pool_id(db,pool_id).await
+}

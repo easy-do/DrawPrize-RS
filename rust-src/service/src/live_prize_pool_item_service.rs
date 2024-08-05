@@ -25,6 +25,10 @@ pub async fn page(db: &DbConn, page: LivePrizePoolItemPage) -> Result<PageResult
     live_prize_pool_item_manager::page(db, page).await
 }
 
-pub async fn add(_db: &DbConn, _live_id: i64, _item_id: i64) -> Result<i64, MyError> {
-    Ok(1)
+pub async fn add(db: &DbConn, live_id: i64, item_id: i64) -> Result<i64, MyError> {
+    live_prize_pool_item_manager::add_for_pool_item(db,live_id,item_id).await
+}
+
+pub async fn delete(db: &DbConn, id: i64) -> Result<bool, MyError> {
+    Ok(live_prize_pool_item_manager::delete(db, id).await?)
 }

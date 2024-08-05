@@ -20,11 +20,11 @@ async fn info(app_state: web::Data<AppState>,
     Ok(HttpResponse::Ok().json(JsonResult::ok(res)))
 }
 
-#[post("/api/live_prize_pool_item/add/{live_id}/{item_id}")]
+#[get("/api/live_prize_pool_item/add/{live_id}/{item_id}")]
 async fn add(app_state: web::Data<AppState>,
-             live_id: web::Path<i64>,
-             item_id: web::Path<i64>,) -> Result<HttpResponse, MyError> {
-    let res = live_prize_pool_item_service::add(&app_state.db, live_id.into_inner(), item_id.into_inner()).await?;
+             param: web::Path<(i64, i64)>,) -> Result<HttpResponse, MyError> {
+    let param = param.into_inner();
+    let res = live_prize_pool_item_service::add(&app_state.db, param.0, param.1).await?;
     Ok(HttpResponse::Ok().json(JsonResult::ok(res)))
 }
 
@@ -41,3 +41,11 @@ async fn update(app_state: web::Data<AppState>,
     let res = live_prize_pool_item_service::update(&app_state.db, form.into_inner()).await?;
     Ok(HttpResponse::Ok().json(JsonResult::ok(res)))
 }
+
+#[get("/api/live_prize_pool_item/delete/{id}")]
+async fn delete(app_state: web::Data<AppState>,
+                params: web::Path<i64>, ) -> Result<HttpResponse, MyError> {
+    let res = live_prize_pool_item_service::delete(&app_state.db, params.into_inner()).await?;
+    Ok(HttpResponse::Ok().json(JsonResult::ok(res)))
+}
+

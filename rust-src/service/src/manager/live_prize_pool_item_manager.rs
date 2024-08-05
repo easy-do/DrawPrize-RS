@@ -12,8 +12,9 @@ use entity::{live_prize_pool_item, prize_pool_item};
 use entity::live_prize_pool_item::Model;
 use entity::prelude::LivePrizePoolItem;
 use model::prize::LivePrizePoolItemPage;
-use crate::manager::prize_pool_item_manager::check_probability;
 
+use crate::manager::prize_pool_item_manager;
+use crate::manager::prize_pool_item_manager::check_probability;
 
 pub async fn create_live_item(db: &DbConn, live_id : i64, items: Vec<prize_pool_item::Model>) -> Result<i64, MyError> {
     let mut entities = Vec::new();
@@ -215,4 +216,21 @@ pub async fn pool_item_remaining_quantity_count(db: &DbConn, live_id: i64)  -> R
                 }
             }
         }
+}
+
+pub async fn add_for_pool_item(db: &DbConn, live_id: i64, item_id: i64)  -> Result<i64, MyError> {
+    let item = prize_pool_item_manager::get_prize_pool_item_data(db, item_id).await?;
+    match item {
+        None => {
+            Err(MyError::ServerError("奖品不存在".to_string()))
+        }
+        Some(item) => {
+            create_live_item(db, live_id, vec![item]).await
+        }
+    }
+}
+
+pub async fn delete(db: &DbConn, id: i64)  -> Result<bool, MyError>  {
+    let res = LivePrizePoolItem::delete_by_id(id).exec(db).await?;
+    Ok(res.rows_affected == 1)
 }

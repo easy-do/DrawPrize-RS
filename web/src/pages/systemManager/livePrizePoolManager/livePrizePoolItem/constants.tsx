@@ -118,6 +118,27 @@ export function getColumns(
             {t['searchTable.columns.operations.update']}
           </Button>
         </PermissionWrapper>,
+        <PermissionWrapper
+        key={'delete'}
+        requiredPermissions={[
+          {
+            resource: 'live_prize_pool_item_manager',
+            actions: ['api_live_prize_pool_item_delete'],
+          },
+        ]}
+      >
+        <Popconfirm
+          focusLock
+          title={t['option.delete.confirm.title']}
+          onOk={() => {
+            callback(record, 'delete');
+          }}
+        >
+          <Button status="danger" type="text" size="small">
+            {t['searchTable.columns.operations.delete']}
+          </Button>
+        </Popconfirm>
+      </PermissionWrapper>,
       ],
     },
   ];
