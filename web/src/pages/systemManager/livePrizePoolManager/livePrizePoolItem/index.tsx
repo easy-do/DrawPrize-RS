@@ -3,20 +3,24 @@ import {
   Table,
   Card,
   PaginationProps,
-  Button,
-  Space,
   Typography,
   Notification,
+  Space,
+  Button
 } from '@arco-design/web-react';
 import useLocale from '@/utils/useLocale';
 import SearchForm from './form';
 import locale from './locale';
 import { DefaultSorter, getColumns } from './constants';
-import { getLivePrizePoolItemPage } from '@/api/livePrizePoolItem';
+import { getLivePrizePoolItemPage, removeLivePrizePoolItem } from '@/api/livePrizePoolItem';
 
 import { v4 } from 'uuid';
 import InfoPage from './infoPage';
 import UpdatePage from './updatePage';
+import PermissionWrapper from '@/components/PermissionWrapper';
+import { IconPlus } from '@arco-design/web-react/icon';
+import styles from './style/index.module.less';
+import AddPage from './addPage';
 
 const { Title } = Typography;
 
@@ -25,6 +29,10 @@ function PrizePoolItemPage(props: { livePrizePoolId: number }) {
 
   //表格列回调函数
   const tableCallback = async (record, type) => {
+    //新增
+    if (type === 'add') {
+      addData();
+    }
     //查看
     if (type === 'view') {
       viewInfo(record.id);
@@ -33,8 +41,17 @@ function PrizePoolItemPage(props: { livePrizePoolId: number }) {
     if (type === 'update') {
       updateData(record.id);
     }
+    //删除
+    if (type === 'delete') {
+      deleteData(record.id);
+    }
   };
 
+  //添加
+  const [addVisible, setAddVisible] = useState(false);
+  function addData() {
+    setAddVisible(true);
+  }
 
   //查看
   const [viewVisible, setViewVisibled] = useState(false);
@@ -50,6 +67,20 @@ function PrizePoolItemPage(props: { livePrizePoolId: number }) {
   function updateData(id) {
     setUpdateInfoId(id);
     setUpdateVisibled(true);
+  }
+
+   //删除
+   function deleteData(id) {
+    removeLivePrizePoolItem(id).then((res) => {
+      const { success, message } = res.data;
+      if (success) {
+        Notification.success({ content: message, duration: 1000 });
+        fetchData();
+      } else {
+        Notification.error({ content: message, duration: 1000 });
+        fetchData();
+      }
+    });
   }
 
   const columns = useMemo(() => getColumns(t, tableCallback), [t]);
@@ -138,6 +169,23 @@ function PrizePoolItemPage(props: { livePrizePoolId: number }) {
     <Card>
       <Title heading={6}>{t['menu.list.searchTable']}</Title>
       <SearchForm livePrizePoolId={props.livePrizePoolId} onSearch={handleSearch} />
+      <PermissionWrapper
+        requiredPermissions={[
+          { resource: 'live_prize_pool_item_manager', actions: ['api_live_prize_pool_item_add'] },
+        ]}
+      >
+        <div className={styles['button-group']}>
+          <Space>
+            <Button
+              type="primary"
+              icon={<IconPlus />}
+              onClick={() => tableCallback(null, 'add')}
+            >
+              {t['searchTable.operations.add']}
+            </Button>
+          </Space>
+        </div>
+      </PermissionWrapper>
       <Table
         rowKey="id"
         loading={loading}
@@ -145,6 +193,12 @@ function PrizePoolItemPage(props: { livePrizePoolId: number }) {
         pagination={pagination}
         columns={columns}
         data={data}
+      />
+      <AddPage 
+      visible={addVisible} 
+      setVisible={setAddVisible} 
+      livePrizePoolId={props.livePrizePoolId} 
+      callback={fetchData}      
       />
       <InfoPage
         id={viewInfoId}

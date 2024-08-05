@@ -47,3 +47,9 @@ async fn delete(app_state: web::Data<AppState>,
     let res = prize_pool_item_service::delete(&app_state.db, params.into_inner()).await?;
     Ok(HttpResponse::Ok().json(JsonResult::ok(res)))
 }
+#[get("/api/prize_pool_item/get_by_pool_id/{pool_id}")]
+async fn get_by_pool_id(app_state: web::Data<AppState>,
+                params: web::Path<i64>, ) -> Result<HttpResponse, MyError> {
+    let res = prize_pool_item_service::get_by_pool_id(&app_state.db, params.into_inner()).await?;
+    Ok(HttpResponse::Ok().json(JsonResult::ok(res)))
+}
