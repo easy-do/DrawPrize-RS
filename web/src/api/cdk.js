@@ -1,7 +1,7 @@
 import { get,postRequestBody } from "../utils/request"
 
 /** 授权相关 */
-export const removeCdk = (param) => postRequestBody("/api/cdk/delete/",param);
+export const removeCdk = (param) => postRequestBody("/api/cdk/delete",param);
 export const getCdkPage = (param) => postRequestBody("/api/cdk/page",param);
 export const getCdkInfo = (id) => get("/api/cdk/info/"+id);
 export const addCdk = (param) => postRequestBody("/api/cdk/add",param);
