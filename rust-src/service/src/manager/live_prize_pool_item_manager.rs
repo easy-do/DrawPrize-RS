@@ -9,7 +9,6 @@ use sea_orm::QueryFilter;
 use common::error::MyError;
 use common::page::PageResult;
 use entity::{live_prize_pool_item, prize_pool_item};
-use entity::live_prize_pool_item::Model;
 use entity::prelude::LivePrizePoolItem;
 use model::prize::LivePrizePoolItemPage;
 
@@ -29,6 +28,7 @@ pub async fn create_live_item(db: &DbConn, live_id : i64, items: Vec<prize_pool_
             level_name: Set(item.level_name),
             probability: Set(item.probability),
             remaining_quantity: Set(item.quantity),
+            cdk_quantity: Set(Some(0)),
             status: Set(item.status),
             guarantees: Set(item.guarantees),
             create_time: Set(Some(Local::now().naive_local())),
@@ -182,7 +182,7 @@ pub async fn get_prize_pool_item_list_by_live_id(db: &DbConn, live_id: i64) -> R
     Ok(res)
 }
 
-pub async fn update_remaining_quantity(db: &DbConn, map: HashMap<i64, Vec<Model>>)  -> Result<bool, MyError> {
+pub async fn update_remaining_quantity(db: &DbConn, map: HashMap<i64, Vec<live_prize_pool_item::Model>>)  -> Result<bool, MyError> {
     for item in map{
         let entity = LivePrizePoolItem::find_by_id(item.0).one(db).await?;
         match entity {
@@ -193,6 +193,23 @@ pub async fn update_remaining_quantity(db: &DbConn, map: HashMap<i64, Vec<Model>
                 entity.update_time = Set(Some(Local::now().naive_local()));
                 entity.update(db).await?;
             }
+        }
+    }
+    Ok(true)
+}
+
+pub async fn update_cdk_quantity(db: &DbConn, live_id:i64, prize_id:i64, num:i32)  -> Result<bool, MyError> {
+    let entity = LivePrizePoolItem::find()
+        .filter(live_prize_pool_item::Column::LiveId.eq(live_id))
+        .filter(live_prize_pool_item::Column::PrizeId.eq(prize_id))
+        .one(db).await?;
+    match entity {
+        None => {}
+        Some(entity) => {
+            let mut entity: live_prize_pool_item::ActiveModel = entity.into();
+            entity.cdk_quantity = Set(if num == 0 {Some(0)}else{Some(entity.cdk_quantity.unwrap().unwrap() + num)});
+            entity.update_time = Set(Some(Local::now().naive_local()));
+            entity.update(db).await?;
         }
     }
     Ok(true)

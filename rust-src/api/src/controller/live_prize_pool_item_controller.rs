@@ -4,7 +4,7 @@ use common::error::MyError;
 use common::r::JsonResult;
 use common::state::AppState;
 use entity::live_prize_pool_item;
-use model::prize::LivePrizePoolItemPage;
+use model::prize::{ImportPoolItemCdk, LivePrizePoolItemPage};
 use service::live_prize_pool_item_service;
 
 #[get("/api/live_prize_pool_item/list")]
@@ -49,3 +49,17 @@ async fn delete(app_state: web::Data<AppState>,
     Ok(HttpResponse::Ok().json(JsonResult::ok(res)))
 }
 
+#[post("/api/live_prize_pool_item/import_cdk")]
+async fn import_cdk(app_state: web::Data<AppState>,
+                params: web::Json<ImportPoolItemCdk>, ) -> Result<HttpResponse, MyError> {
+    let res = live_prize_pool_item_service::import_cdk(&app_state.db, params.into_inner()).await?;
+    Ok(HttpResponse::Ok().json(JsonResult::ok(res)))
+}
+
+#[get("/api/live_prize_pool_item/clean_cdk/{live_id}/{item_id}")]
+async fn clean_cdk(app_state: web::Data<AppState>,
+                   params: web::Path<(i64, i64)>, ) -> Result<HttpResponse, MyError> {
+    let param = params.into_inner();
+    let res = live_prize_pool_item_service::clean_cdk(&app_state.db, param.0,param.1).await?;
+    Ok(HttpResponse::Ok().json(JsonResult::ok(res)))
+}

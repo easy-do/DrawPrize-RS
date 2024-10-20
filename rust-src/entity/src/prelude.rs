@@ -12,4 +12,4 @@ pub use super::role::Entity as Role;
 pub use super::role_resource::Entity as RoleResource;
 pub use super::user::Entity as User;
 pub use super::user_role::Entity as UserRole;
-
+pub use super::live_prize_pool_item_cdk::Entity as LivePrizePoolItemCdk;

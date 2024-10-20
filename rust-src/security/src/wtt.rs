@@ -115,7 +115,7 @@ fn has_permission(req: &ServiceRequest) -> Result<bool, MyError> {
         } else {
             let empty_method_conf = &auth_conf.empty_method;
             //如果没有根据请求方法鉴权的规则就遍历所有规则
-            for api_auth_path_conf_model in empty_method_conf {
+            while let Some(api_auth_path_conf_model) = empty_method_conf {
                 //路径匹配
                 let api_path_check_res = api_path_check(request_path, Some(api_auth_path_conf_model), token_auth_cache)?;
                 //表达式匹配

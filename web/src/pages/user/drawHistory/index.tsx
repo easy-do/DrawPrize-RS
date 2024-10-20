@@ -23,16 +23,16 @@ function PrizePoolItemPage(props: { prizePoolId: number }) {
   const tableCallback = async (record, type) => {
     //查看
     if (type === 'view') {
-      viewInfo(record.id);
+      viewInfo(record);
     }
   };
 
 
   //查看
   const [viewVisible, setViewVisibled] = useState(false);
-  const [viewInfoId, setViewInfoId] = useState();
-  function viewInfo(id) {
-    setViewInfoId(id);
+  const [viewInfoData, setViewInfoData] = useState();
+  function viewInfo(record) {
+    setViewInfoData(record);
     setViewVisibled(true);
   }
 
@@ -125,7 +125,7 @@ function PrizePoolItemPage(props: { prizePoolId: number }) {
         data={data}
       />
       <InfoPage
-        id={viewInfoId}
+        info={viewInfoData}
         visible={viewVisible}
         setVisible={setViewVisibled}
       />

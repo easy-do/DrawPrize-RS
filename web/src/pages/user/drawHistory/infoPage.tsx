@@ -5,30 +5,14 @@ import useLocale from '@/utils/useLocale';
 import { getPrizePoolItemInfo } from '@/api/prizePoolItem';
 import dayjs from 'dayjs';
 
-function InfoPage(props: { id: number; visible; setVisible }) {
+function InfoPage(props: { info: any; visible; setVisible }) {
   const [loading, setLoading] = useState(false);
 
   const [infoData, setInfoData] = useState<any>();
 
-  function fetchData() {
-    setLoading(true);
-    if (props.id !== undefined) {
-      getPrizePoolItemInfo(props.id)
-        .then((res) => {
-          const { success, data } = res.data;
-          if (success) {
-            setInfoData(data);
-          }
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    }
-  }
-
   useEffect(() => {
-    fetchData();
-  }, [props.id]);
+    setInfoData(props.info);
+  }, [JSON.stringify(props.info)]);
 
   const t = useLocale(locale);
 
@@ -57,48 +41,15 @@ function InfoPage(props: { id: number; visible; setVisible }) {
               value: infoData ? infoData.id : '',
             },
             {
-              label: t['searchTable.columns.pool_id'],
-              value: infoData ? infoData.pool_id : '',
-            },
-            {
-              label: t['searchTable.columns.prize_name'],
-              value: infoData ? infoData.prize_name : '',
-            },
-            {
-              label: t['searchTable.columns.icon'],
-              value: infoData ? infoData.icon : '',
-            },
-            {
-              label: t['searchTable.columns.level'],
-              value: infoData ? infoData.level : '',
-            },
-            {
-              label: t['searchTable.columns.level_name'],
-              value: infoData ? infoData.level_name : '',
-            },
-            {
-              label: t['searchTable.columns.probability'],
-              value: infoData ? infoData.probability : '',
-            },
-            {
-              label: t['searchTable.columns.quantity'],
-              value: infoData ? infoData.quantity : '',
-            },
-            {
-              label: t['searchTable.columns.status'],
-              value: infoData
-                ? infoData.status
-                  ? t['searchForm.enable']
-                  : t['searchForm.disable']
-                : '',
-            },
-            {
-              label: t['searchTable.columns.guarantees'],
-              value: infoData
-                ? infoData.guarantees
-                  ? t['searchTable.columns.yes']
-                  : t['searchTable.columns.no']
-                : '',
+              label: t['searchTable.columns.prize_ids'],
+              value: infoData && infoData.prize_items ? JSON.parse(infoData.prize_items).map((item, index) => (
+                    <>
+                      <span key={index} style={{color:'red'}}>[{item.level_name}]</span>
+                      <span key={index} style={{color:'blue'}}>{item.prize_name}</span>
+                      <span key={index} style={{color:'red'}}>[cdk:{item.cdk}]</span>
+                      <br></br>
+                    </>
+                  )) : ''
             },
             {
               label: t['searchTable.columns.create_time'],

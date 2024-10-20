@@ -12,7 +12,7 @@ use entity::{live_prize_history, live_prize_pool, live_prize_pool_item, live_pri
 use model::prize::{LivePrizePoolPage, PoolDrawCount};
 use security::state::AuthState;
 
-use crate::manager::{live_prize_history_manager, live_prize_pool_item_manager, live_prize_pool_manager, live_prize_pool_user_manager};
+use crate::manager::{live_prize_history_manager, live_prize_pool_item_cdk_manager, live_prize_pool_item_manager, live_prize_pool_manager, live_prize_pool_user_manager};
 
 pub async fn list(db: &DbConn) -> Result<Vec<live_prize_pool::Model>, MyError> {
     Ok(live_prize_pool_manager::get_live_prize_pool_list(db).await?)
@@ -36,7 +36,7 @@ pub async fn page(db: &DbConn, page: LivePrizePoolPage) -> Result<PageResult<liv
     live_prize_pool_manager::page(db, page).await
 }
 
-pub async fn draw(db: &DbConn, live_id: i64, draw_num: i32, token: &str, req: HttpRequest) -> Result<Vec<live_prize_pool_item::PoolItemList>, MyError> {
+pub async fn draw(db: &DbConn, live_id: i64, draw_num: i32, token: &str, req: HttpRequest) -> Result<Vec<live_prize_pool_item::DrawPoolItemList>, MyError> {
     let auth_state = req.app_data::<Arc<Mutex<AuthState>>>().ok_or(MyError::ServerError("get auth_state fail".to_string()))?;
     let auth_state = auth_state.lock().unwrap();
     let uid = auth_state.token_auth_cache.get(token).ok_or(MyError::UnauthorizedError("no auth cache".to_string()))?.uid;
@@ -145,10 +145,14 @@ pub async fn draw(db: &DbConn, live_id: i64, draw_num: i32, token: &str, req: Ht
                     }
                     live_prize_pool_item_manager::update_remaining_quantity(db, item_map).await?;
 
+
+
                     //抽奖结果
                     let mut result = Vec::new();
                     for item in &draw_item {
-                        result.push(live_prize_pool_item::PoolItemList {
+                        //消费cdk
+                        let cdk = live_prize_pool_item_cdk_manager::consumer_cdk(db,live_id,item.prize_id).await?;
+                        result.push(live_prize_pool_item::DrawPoolItemList {
                             id: item.id.clone(),
                             live_id: None,
                             prize_id: item.prize_id,
@@ -157,6 +161,22 @@ pub async fn draw(db: &DbConn, live_id: i64, draw_num: i32, token: &str, req: Ht
                             level_name: item.level_name.clone(),
                             icon: item.icon.clone(),
                             remaining_quantity: None,
+                            cdk_id: match cdk.clone() {
+                                None => {
+                                    None
+                                }
+                                Some(c) => {
+                                    Option::from(c.id)
+                                }
+                            },
+                            cdk:  match cdk.clone() {
+                                None => {
+                                    None
+                                }
+                                Some(c) => {
+                                    Option::from(c.cdk)
+                                }
+                            },
                         });
                     }
 

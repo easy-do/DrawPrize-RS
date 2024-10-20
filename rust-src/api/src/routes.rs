@@ -47,7 +47,9 @@ pub fn live_prize_pool_item_routes(cfg: &mut web::ServiceConfig) {
         .service(live_prize_pool_item_controller::info)
         .service(live_prize_pool_item_controller::page)
         .service(live_prize_pool_item_controller::delete)
-        .service(live_prize_pool_item_controller::add);
+        .service(live_prize_pool_item_controller::add)
+        .service(live_prize_pool_item_controller::import_cdk)
+        .service(live_prize_pool_item_controller::clean_cdk);
 }
 
 pub fn live_prize_pool_routes(cfg: &mut web::ServiceConfig) {
