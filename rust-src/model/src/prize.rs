@@ -91,3 +91,10 @@ pub struct UserDrawHistoryPage {
     pub live_id: Option<i64>,
     pub create_time: Option<Vec<String>>,
 }
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
+pub struct ImportPoolItemCdk {
+    pub live_id: i64,
+    pub prize_id: i64,
+    pub cdk: Vec<String>,
+}

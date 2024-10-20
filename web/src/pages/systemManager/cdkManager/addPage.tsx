@@ -28,20 +28,22 @@ function AddPage(props: { visible; setVisible; callback: () => void }) {
   const [poolSelectData, setPoolSelectData] = useState([]);
 
   useEffect(() => {
-    getLivePrizePoolSelectList().then((res) => {
-      const { success, data } = res.data;
-      if (success && data.length > 0) {
-        setPoolSelectData(
-          data.map((item) => {
-            return {
-              label: item.pool_name,
-              value: item.id,
-            };
-          })
-        );
-      }
-    });
-  }, []);
+    if(props.visible){
+      getLivePrizePoolSelectList().then((res) => {
+        const { success, data } = res.data;
+        if (success && data.length > 0) {
+          setPoolSelectData(
+            data.map((item: { pool_name: any; id: any; }) => {
+              return {
+                label: item.pool_name,
+                value: item.id,
+              };
+            })
+          );
+        }
+      });
+    }
+  }, [props.visible]);
 
   const handleSubmit = () => {
     formRef.current.validate().then((values) => {

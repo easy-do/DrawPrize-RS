@@ -47,6 +47,11 @@ export function getColumns(
       ellipsis: true,
     },
     {
+      title: t['searchTable.columns.cdk_quantity'],
+      dataIndex: 'cdk_quantity',
+      ellipsis: true,
+    },
+    {
       title: t['searchTable.columns.status'],
       dataIndex: 'status',
       render: (value) =>
@@ -89,6 +94,7 @@ export function getColumns(
       title: t['searchTable.columns.operations'],
       dataIndex: 'operations',
       headerCellStyle: { paddingLeft: '15px' },
+      with:500,
       render: (_, record) => [
         <PermissionWrapper
           key={'view'}
@@ -119,30 +125,56 @@ export function getColumns(
           </Button>
         </PermissionWrapper>,
         <PermissionWrapper
-        key={'delete'}
-        requiredPermissions={[
-          {
-            resource: 'live_prize_pool_item_manager',
-            actions: ['api_live_prize_pool_item_delete'],
-          },
-        ]}
-      >
-        <Popconfirm
-          focusLock
-          title={t['option.delete.confirm.title']}
-          onOk={() => {
-            callback(record, 'delete');
-          }}
+          key={'delete'}
+          requiredPermissions={[
+            {
+              resource: 'live_prize_pool_item_manager',
+              actions: ['api_live_prize_pool_item_delete'],
+            },
+          ]}
         >
-          <Button status="danger" type="text" size="small">
-            {t['searchTable.columns.operations.delete']}
+          <Popconfirm
+            focusLock
+            title={t['option.delete.confirm.title']}
+            onOk={() => {
+              callback(record, 'delete');
+            }}
+          >
+            <Button status="danger" type="text" size="small">
+              {t['searchTable.columns.operations.delete']}
+            </Button>
+          </Popconfirm>
+        </PermissionWrapper>,
+        <PermissionWrapper
+          key={'import_cdk'}
+        >
+          <Button
+            type="text"
+            size="small"
+            onClick={() => callback(record, 'import_cdk')}
+          >
+            {t['searchTable.columns.operations.import_cdk']}
           </Button>
-        </Popconfirm>
-      </PermissionWrapper>,
+        </PermissionWrapper>,
+        <PermissionWrapper
+          key={'clean_cdk'}
+        >
+          <Popconfirm
+            focusLock
+            title={t['option.clean_cdk.confirm.title']}
+            onOk={() => {
+              callback(record, 'clean_cdk');
+            }}
+          >
+            <Button status="danger" type="text" size="small">
+              {t['searchTable.columns.operations.clean_cdk']}
+            </Button>
+          </Popconfirm>
+        </PermissionWrapper>,
       ],
     },
   ];
 }
-export default function Constants () {
+export default function Constants() {
   return (<></>)
 }

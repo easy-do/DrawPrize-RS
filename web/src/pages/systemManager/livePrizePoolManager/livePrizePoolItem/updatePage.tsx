@@ -170,7 +170,7 @@ function UpdatePage(props: { id: number; visible; setVisible; callback }) {
           label={t['searchTable.columns.remaining_quantity']}
           field={'remaining_quantity'}
         >
-          <Input placeholder={t['searchForm.placeholder']} allowClear />
+          <InputNumber placeholder={t['searchForm.placeholder']} />
         </FormItem>
         <FormItem
           required

@@ -7,4 +7,5 @@ export const getLivePrizePoolItemPage = (param) => postRequestBody("/api/live_pr
 export const updateLivePrizePoolItem = (param) => postRequestBody("/api/live_prize_pool_item/update", param);
 export const removeLivePrizePoolItem = (id) => get("/api/live_prize_pool_item/delete/" + id);
 export const addLivePrizePoolItem = (live_id,item_id) => get("/api/live_prize_pool_item/add/"+live_id+"/"+item_id);
-
+export const cleanLivePrizePoolItemCdk = (live_id,item_id) => get("/api/live_prize_pool_item/clean_cdk/"+live_id+"/"+item_id);
+export const importLivePrizePoolItemCdk = (param) => postRequestBody("/api/live_prize_pool_item/import_cdk", param);

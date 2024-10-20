@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography } from '@arco-design/web-react';
+import { Button, Typography } from '@arco-design/web-react';
 import dayjs from 'dayjs';
 
 const { Text } = Typography;
@@ -21,11 +21,6 @@ export function getColumns(
       sorter: true,
       render: (value) => <Text copyable>{value}</Text>,
     },
-    // {
-    //   title: t['searchTable.columns.live_id'],
-    //   dataIndex: 'live_id',
-    //   ellipsis: true,
-    // },
     {
       width: '150px',
       title: t['searchTable.columns.action'],
@@ -45,31 +40,20 @@ export function getColumns(
       },
     },
     {
-      title: t['searchTable.columns.prize_ids'],
-      dataIndex: 'prize_items',
-      ellipsis: true,
-      render: (value) => value? JSON.parse(value).map((item, index) => (
-        <>
-          <span key={index} style={{color:'red'}}>[{item.level_name}]</span>
-          <span key={index} style={{color:'blue'}}>{item.prize_name}</span>&nbsp;
-        </>
-      )) : ''
+      title: t['searchTable.columns.operations'],
+      dataIndex: 'operations',
+      headerCellStyle: { paddingLeft: '15px' },
+      render: (_, record) => [
+          <Button
+            key={'info'}
+            type="text"
+            size="small"
+            onClick={() => callback(record, 'view')}
+          >
+            {t['searchTable.columns.operations.view']}
+          </Button>
+      ],
     },
-    // {
-    //   title: t['searchTable.columns.operations'],
-    //   dataIndex: 'operations',
-    //   headerCellStyle: { paddingLeft: '15px' },
-    //   render: (_, record) => [
-    //       <Button
-    //         key={'info'}
-    //         type="text"
-    //         size="small"
-    //         onClick={() => callback(record, 'view')}
-    //       >
-    //         {t['searchTable.columns.operations.view']}
-    //       </Button>
-    //   ],
-    // },
   ];
 }
 export default function Constants () {

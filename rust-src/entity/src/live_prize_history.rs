@@ -31,7 +31,7 @@ pub struct TopDraw {
     pub user_name: Option<String>,
 }
 
-#[derive(FromQueryResult,Serialize, Deserialize)]
+#[derive(Clone, FromQueryResult,Serialize, Deserialize)]
 pub struct DrawHistory {
     pub action: Option<i64>,
     pub user_id: Option<i64>,

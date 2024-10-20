@@ -6,13 +6,16 @@ import {
   Typography,
   Notification,
   Space,
-  Button
+  Button,
+  Modal,
+  Form,
+  Input
 } from '@arco-design/web-react';
 import useLocale from '@/utils/useLocale';
 import SearchForm from './form';
 import locale from './locale';
 import { DefaultSorter, getColumns } from './constants';
-import { getLivePrizePoolItemPage, removeLivePrizePoolItem } from '@/api/livePrizePoolItem';
+import { cleanLivePrizePoolItemCdk, getLivePrizePoolItemPage, importLivePrizePoolItemCdk, removeLivePrizePoolItem } from '@/api/livePrizePoolItem';
 
 import { v4 } from 'uuid';
 import InfoPage from './infoPage';
@@ -45,6 +48,14 @@ function PrizePoolItemPage(props: { livePrizePoolId: number }) {
     if (type === 'delete') {
       deleteData(record.id);
     }
+    //删除
+    if (type === 'import_cdk') {
+      importCdk(record.id);
+    }
+    //删除
+    if (type === 'clean_cdk') {
+      cleanCdk(record.id);
+    }
   };
 
   //添加
@@ -72,6 +83,29 @@ function PrizePoolItemPage(props: { livePrizePoolId: number }) {
    //删除
    function deleteData(id) {
     removeLivePrizePoolItem(id).then((res) => {
+      const { success, message } = res.data;
+      if (success) {
+        Notification.success({ content: message, duration: 1000 });
+        fetchData();
+      } else {
+        Notification.error({ content: message, duration: 1000 });
+        fetchData();
+      }
+    });
+  }
+
+    //导入cdk
+    const [importCdkVisible, setImportCdkVisibled] = useState(false);
+    const [importCdkId, setImportCdkId] = useState();
+    const [cdktValues, setCdktValues] = useState('');
+    function importCdk(id) {
+      setImportCdkId(id);
+      setImportCdkVisibled(true);
+    }
+
+  //清空cdk
+  function cleanCdk(id) {
+    cleanLivePrizePoolItemCdk(props.livePrizePoolId,id).then((res) => {
       const { success, message } = res.data;
       if (success) {
         Notification.success({ content: message, duration: 1000 });
@@ -211,6 +245,27 @@ function PrizePoolItemPage(props: { livePrizePoolId: number }) {
         setVisible={setUpdateVisibled}
         callback={fetchData}
       />
+      <Modal
+        title={t['searchTable.columns.operations.import_cdk']}
+        visible={importCdkVisible}
+        onCancel={() => setImportCdkVisibled(false)}
+        onConfirm={() => {
+          importLivePrizePoolItemCdk({
+            live_id: props.livePrizePoolId,
+            prize_id: importCdkId,
+            cdk: cdktValues.split('\n'),
+          }).then((res) => {
+            const { success, data } = res.data;
+            if (success) {
+              setImportCdkVisibled(false);
+              Notification.success({ content: "成功导入"+data+"个", duration: 1000 });
+              fetchData();
+            }
+          });
+        }}
+      >
+          <Input.TextArea style={{minHeight:'300px'}} defaultValue={cdktValues} onChange={(value)=>setCdktValues(value)}  placeholder='每行一个' allowClear />
+      </Modal>
     </Card>
   );
 }

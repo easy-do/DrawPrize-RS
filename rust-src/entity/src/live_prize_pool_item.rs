@@ -17,6 +17,7 @@ pub struct Model {
     pub level_name: Option<String>,
     pub probability: Option<String>,
     pub remaining_quantity: Option<i32>,
+    pub cdk_quantity: Option<i32>,
     pub status: Option<bool>,
     pub guarantees: Option<bool>,
     pub create_time: Option<DateTime>,
@@ -40,4 +41,18 @@ pub struct PoolItemList {
     pub level_name: Option<String>,
     pub icon: Option<String>,
     pub remaining_quantity: Option<i32>,
+}
+
+#[derive(Clone,FromQueryResult,Serialize, Deserialize)]
+pub struct DrawPoolItemList {
+    pub id: i64,
+    pub live_id: Option<i64>,
+    pub prize_id: Option<i64>,
+    pub prize_name: Option<String>,
+    pub level: Option<i32>,
+    pub level_name: Option<String>,
+    pub icon: Option<String>,
+    pub remaining_quantity: Option<i32>,
+    pub cdk_id: Option<i64>,
+    pub cdk: Option<String>,
 }
