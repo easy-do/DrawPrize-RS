@@ -57,9 +57,9 @@ pub async fn draw_history(db: &DbConn) -> Result<Vec<live_prize_history::DrawHis
         .column(live_prize_history::Column::PrizeIds)
         .column(live_prize_history::Column::PrizeItems)
         .column(user::Column::UserName)
-        .order_by(live_prize_history::Column::CreateTime, Order::Desc)
+        .order_by(live_prize_history::Column::CreateTime, Order::Asc)
         .into_model::<live_prize_history::DrawHistory>()
-        .paginate(db, 50).fetch_page(0).await?;
+        .paginate(db, 50).fetch_page(1).await?;
     let mut result = Vec::new();
     for history in list {
         let prize_items = history.prize_items.clone();
